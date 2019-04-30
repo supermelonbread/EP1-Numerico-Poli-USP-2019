@@ -118,14 +118,14 @@ vector<double> QR(vector<vector<double> >& matriz, vector<double>& vetor)
 		}
 	}
 	vector<double> x;
-	x.resize(vetor.size());
-	for (int k = vetor.size() - 1; k >= 0; k--)
+	x.resize(matriz[0].size());
+	for (int k = matriz[0].size() - 1; k >= 0; k--)
 	{
-		if (k == vetor.size() - 1) { x[k] = vetor[k] / matriz[k][k]; }
+		if (k == matriz[0].size() - 1) { x[k] = vetor[k] / matriz[k][k]; }
 		else
 		{
 			double soma = 0;
-			for (int j = k + 1; j <= vetor.size() - 1; j++)
+			for (int j = k + 1; j <= matriz[0].size() - 1; j++)
 			{
 				soma += matriz[k][j] * x[j] / matriz[k][k];
 			}

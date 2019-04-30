@@ -15,7 +15,7 @@ int main() {
 
 	//m * n is the size of the matrix
 
-	int m = 4, n = 4;
+	int m = 4, n = 2;
 	//Grow rows by m
 	a.resize(m);
 	for (int i = 0; i < m; ++i)
@@ -31,15 +31,15 @@ int main() {
 	//a[2] = { 0, 0, 2, 2, -1 };
 	//a[3] = { 0, 0, -1, 1, 2 };
 	//a[4] = { 0, 0, 0, 3, 1 };
-	a[0] = { 1, 2.38629, 3.19722, 3.77258 };
-	a[1] = { 4.21887, 4.58351, 4.89182, 5.15888 };
-	a[2] = { 5.39445, 5.60517, 5.79579, 5.96981 };
-	a[3] = { 6.12989, 6.27811, 6.41610, 6.54517 };
+	a[0] = { 1, 0 };
+	a[1] = { 1, 1 };
+	a[2] = { 1, 2 };
+	a[3] = { 1, 3 };
 
 	vector<double> b;
-	b.resize(4);
-	b = { 1, 2, 3, 4 };
-
+	b.resize(m);
+	b = { 1, 2, 4, 8 };
+	//b = { 1,2 };
 
 	cout << "Matriz inicial: " << endl;
 	for (int i = 0; i < m; i++) {
@@ -57,6 +57,9 @@ int main() {
 
 	vector<double> x;
 
+	cout << a[0].size() << endl;
+	cout << a.size() << endl;
+
 	x = QR(a, b);
 
 	cout << endl << "Matriz final: " << endl;
@@ -73,7 +76,7 @@ int main() {
 		cout << b[i] << " ";
 	}
 	cout << endl << endl;
-	cout << "Soluçao: " << endl;
+	cout << "Solucao: " << endl;
 	for (int i = 0; i < x.size(); i++) {
 		cout << x[i] << " ";
 	}
