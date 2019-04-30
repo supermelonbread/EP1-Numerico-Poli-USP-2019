@@ -8,6 +8,7 @@ using namespace std;
 
 void Givens (vector<vector<double> >& matriz, int i, int j, double teta);
 void Givens(vector<vector<double> >& matriz, int i, int j, double seno, double cosseno);
+void Givens(vector<vector<double> >& matriz, vector<double>& vetor, int i, int j, double seno, double cosseno);
 
 
 #endif 

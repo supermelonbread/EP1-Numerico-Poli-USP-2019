@@ -1,6 +1,4 @@
-﻿// /* 
-#include "rotGivens.h"
-
+﻿#include "rotGivens.h"
 #include <math.h>
 #include <vector>
 
@@ -29,4 +27,13 @@ void Givens(vector<vector<double> >& matriz, int i, int j, double seno, double c
 	for (int k = 0; k < matriz[i].size(); k++) { matriz[i][k] = cosseno * temp[i][k] - seno * temp[j][k]; }
 	for (int k = 0; k < matriz[i].size(); k++) { matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; }
 }
-// */
+
+void Givens(vector<vector<double> >& matriz, vector<double>& vetor, int i, int j, double seno, double cosseno) 
+{
+	vector<vector<double>> temp = matriz;
+	vector<double> tempvec = vetor;
+	for (int k = 0; k < matriz[i].size(); k++) { matriz[i][k] = cosseno * temp[i][k] - seno * temp[j][k]; }
+	vetor[i] = cosseno * tempvec[i] - seno * tempvec[j];
+	for (int k = 0; k < matriz[i].size(); k++) { matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; }
+	vetor[j] = cosseno * tempvec[j] + seno * tempvec[i];
+}
