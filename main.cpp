@@ -18,7 +18,7 @@ int main() {
 	int m = 4, n = 2;
 	//Grow rows by m
 	a.resize(m);
-	for (int i = 0; i < m; ++i)
+	for (int i = 0; i < m; i++)
 	{
 		//Grow Columns by n
 		a[i].resize(n);
@@ -57,10 +57,11 @@ int main() {
 
 	vector<double> x;
 
-	cout << a[0].size() << endl;
-	cout << a.size() << endl;
+	// IMPORTANTE LEMBRAR DISSO
+	cout << endl << "Numero de colunas: " << a[0].size() << endl;
+	cout << "Numero de linhas: "<<a.size() << endl;
 
-	x = QR(a, b);
+	x = solucaoSistemas(a, b);
 
 	cout << endl << "Matriz final: " << endl;
 	for (int i = 0; i < m; i++) {

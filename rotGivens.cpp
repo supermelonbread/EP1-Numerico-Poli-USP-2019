@@ -37,3 +37,20 @@ void Givens(vector<vector<double> >& matriz, vector<double>& vetor, int i, int j
 	for (int k = 0; k < matriz[i].size(); k++) { matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; }
 	vetor[j] = cosseno * tempvec[j] + seno * tempvec[i];
 }
+
+void Givens(vector<vector<double>>& matriz, vector<vector<double>>& matriz2, int i, int j, double seno, double cosseno)
+{
+	vector<vector<double>> temp = matriz;
+	vector<vector<double>> tempmat = matriz2;
+	for (int k = 0; k < matriz[i].size(); k++) 
+	{ 
+		matriz[i][k] = cosseno * temp[i][k] - seno * temp[j][k]; 
+		matriz2[i][k] = cosseno * tempmat[i][k] - seno * tempmat[j][k];
+	}
+	
+	for (int k = 0; k < matriz[i].size(); k++) 
+	{ 
+		matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; 
+		matriz2[j][k] = cosseno * tempmat[j][k] + seno * tempmat[i][k];
+	}
+}

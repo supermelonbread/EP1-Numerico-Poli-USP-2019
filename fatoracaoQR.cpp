@@ -77,7 +77,7 @@ void QR(vector<vector<double> >& matriz)
 		Fim do para
 	Fim do para
 	Para k = m a 1 com passo -1
-		x(k) = b(k) - Somatório de j = k+1 a m de w(k,j)*x(j)/w(k,k)
+		x(k) = (b(k) - Somatório de j = k+1 a m de w(k,j)*x(j))/w(k,k)
 	Fim do para
 
 	caso |w(i,k)| > |w(j,k)|
@@ -91,7 +91,7 @@ void QR(vector<vector<double> >& matriz)
 	cosseno = seno*τ
 
 */
-vector<double> QR(vector<vector<double> >& matriz, vector<double>& vetor)
+vector<double> solucaoSistemas(vector<vector<double> >& matriz, vector<double>& vetor)
 {
 	for (int k = 0; k < matriz[0].size(); k++)
 	{
@@ -143,3 +143,93 @@ vector<double> QR(vector<vector<double> >& matriz, vector<double>& vetor)
 	return x;
 }
 
+/* Dado sistema da forma |A - WH| 
+
+Em que A é uma matriz n x m
+W é n x p   e    H é p x m
+
+Com entrada A e W a saída é a matriz H que resolve o sistema pelo MMQ
+
+	Para k=1 a p faca  -> p = numero de colunas de W
+		Para j=n a k+1 com passo -1 faca    -> n = numero de linhas de A e W
+			i=j-1
+			Se w(j,k) != 0 aplique Q(i, j, θ) a matriz W e a matriz A (com cosseno e seno definidos por w(i,k) e w(j,k))
+		Fim do para
+	Fim do para
+
+	Para k=p a 1 com passo -1
+		Para j=1 a m faca      -> m = numero de colunas de A 
+			h(k,j) = (a(k,j) − somatorio de i = k + 1 a p de w(k,i) h(i,j) )/w(k,k)
+		Fim do para
+	Fim do para
+	caso |w(i,k)| > |w(j,k)|
+	τ = −w(j,k)/w(i,k)
+	cosseno = 1/raiz(1 + τ)
+	seno = seno*τ
+
+	caso contrário
+	τ = −w(i,k)/w(j,k)
+	seno = 1/raiz(1 + τ)
+	cosseno = seno*τ
+
+*/
+
+vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vector<double>>& A) 
+{
+	for (int k = 0; k < W[0].size(); k++)
+	{
+		for (int j = W.size() - 1; j > k; j--)
+		{
+			int i = j - 1;
+			if (abs(W[j][k]) > ZERO)
+			{
+				double cosseno, seno, temp;
+				if (abs(W[i][k]) > abs(W[j][k]))
+				{
+					temp = -W[j][k] / W[i][k];
+					cosseno = 1 / sqrt(1 + temp * temp);
+					seno = cosseno * temp;
+					Givens(W, A, i, j, seno, cosseno);
+				}
+				else {
+					temp = -W[i][k] / W[j][k];
+					seno = 1 / sqrt(1 + temp * temp);
+					cosseno = seno * temp;
+					Givens(W, A, i, j, seno, cosseno);
+				}
+			}
+		}
+	}
+	vector<vector<double>> H;
+	H.resize(W[0].size()); // numero de linhas
+	for (int i = 0; i < H.size(); i++)
+	{
+		H[i].resize(A[0].size()); // numero de colunas
+	}
+
+	for (int k = W[0].size() - 1; k >= 0; k--)
+	{
+		for (int j = 1; j < A[0].size(); j++)
+		{
+			if (k == W[0].size() - 1) { H[k][j] = A[k][j] / W[k][k]; }
+			else
+			{
+				double soma = 0;
+				for (int i = k + 1; i <= W[0].size() - 1; j++)
+				{
+					soma += W[k][j] * H[i][j] / W[k][k];
+				}
+				H[k][j] = A[k][j] / W[k][k] - soma;
+			}
+		}
+	}
+	// Zera os valores praticamente nulos
+	for (int i = 0; i < W[0].size(); i++) {
+		for (int j = 0; j < W.size(); j++) {
+			if (abs(W[j][i]) < ZERO) {
+				W[j][i] = 0;
+			}
+		}
+	}
+	return H;
+}
