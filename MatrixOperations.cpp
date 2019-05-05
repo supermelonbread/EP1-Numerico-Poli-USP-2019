@@ -3,9 +3,11 @@
 #include <fstream>
 #include <vector>
 
+#include "MatrixOperations.h"
+
 using namespace std;
 
-vector<vector<double> > MMultiplication(vector<vector<double> >& a, vector<vector<double> >& b) {
+vector<vector<double> > MMultiplication(vector<vector<double> > a, vector<vector<double> > b) {
 
 	/*
 	a_columns = a[0].size();

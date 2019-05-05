@@ -4,13 +4,13 @@
 #include <string>
 #include <math.h>
 #include "fatoracaoQR.h"
-
+#include "MatrixOperations.h"
 #include "rotGivens.h"
 
 using namespace std;
 
 int main() {
-	
+
 	vector<vector<double> > a;
 
 	//m * n is the size of the matrix
@@ -59,7 +59,7 @@ int main() {
 
 	// IMPORTANTE LEMBRAR DISSO
 	cout << endl << "Numero de colunas: " << a[0].size() << endl;
-	cout << "Numero de linhas: "<<a.size() << endl;
+	cout << "Numero de linhas: " << a.size() << endl;
 
 	x = solucaoSistemas(a, b);
 
