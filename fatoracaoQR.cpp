@@ -161,7 +161,8 @@ Com entrada A e W a saída é a matriz H que resolve o sistema pelo MMQ
 		Para j=1 a m faca      -> m = numero de colunas de A 
 			h(k,j) = (a(k,j) − somatorio de i = k + 1 a p de w(k,i) h(i,j) )/w(k,k)
 		Fim do para
-	Fim do para
+	Fim do para
+
 	caso |w(i,k)| > |w(j,k)|
 	τ = −w(j,k)/w(i,k)
 	cosseno = 1/raiz(1 + τ)
@@ -209,15 +210,16 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 
 	for (int k = W[0].size() - 1; k >= 0; k--)
 	{
-		for (int j = 1; j < A[0].size(); j++)
+		for (int j = 0; j < A[0].size(); j++)
 		{
-			if (k == W[0].size() - 1) { H[k][j] = A[k][j] / W[k][k]; }
+			if (k == W[0].size() - 1) 
+				H[k][j] = A[k][j] / W[k][k]; 
 			else
 			{
 				double soma = 0;
-				for (int i = k + 1; i <= W[0].size() - 1; j++)
+				for (int i = k + 1; i < W[0].size(); i++)
 				{
-					soma += W[k][j] * H[i][j] / W[k][k];
+					soma += W[k][i] * H[i][j] / W[k][k];
 				}
 				H[k][j] = A[k][j] / W[k][k] - soma;
 			}
@@ -228,6 +230,20 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 		for (int j = 0; j < W.size(); j++) {
 			if (abs(W[j][i]) < ZERO) {
 				W[j][i] = 0;
+			}
+		}
+	}
+	for (int i = 0; i < A[0].size(); i++) {
+		for (int j = 0; j < A.size(); j++) {
+			if (abs(A[j][i]) < ZERO) {
+				A[j][i] = 0;
+			}
+		}
+	}
+	for (int i = 0; i < H[0].size(); i++) {
+		for (int j = 0; j < H.size(); j++) {
+			if (abs(H[j][i]) < ZERO) {
+				H[j][i] = 0;
 			}
 		}
 	}
