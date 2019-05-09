@@ -52,10 +52,10 @@ int main() {
 
 	// b é m * p
 	vector<vector<double>> b;
-	//int p = 2;
-	//b.resize(m);
-	//for (int i = 0; i < m; i++)
-	//	b[i].resize(p);
+	int p = 2;
+	b.resize(m);
+	for (int i = 0; i < m; i++)
+		b[i].resize(p);
 	//b = { 1, 2, 4, 8 };
 	//b = { 1,2 };
 	/*for (int i = 0; i < m; i++) {
@@ -92,7 +92,7 @@ int main() {
 	cout << endl << "Numero de colunas: " << a[0].size() << endl;
 	cout << "Numero de linhas: " << a.size() << endl;
 
-	x = NMF(a, 2);
+	b = NMF(a, 2, x);
 
 	cout << endl << "Matriz final: " << endl;
 	for (int i = 0; i < m; i++) {
@@ -103,14 +103,14 @@ int main() {
 	}
 	cout << endl;
 
-	//cout << "B final: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < p; j++) {
-	//		cout << b[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-	cout << endl << endl;
+	cout << "B final: " << endl;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < p; j++) {
+			cout << b[i][j] << " ";
+		}
+		cout << endl;
+	}
+
 	cout << "Solucao: " << endl;
 	for (int i = 0; i < x.size(); i++) {
 		for (int j = 0; j < x[0].size(); j++) {

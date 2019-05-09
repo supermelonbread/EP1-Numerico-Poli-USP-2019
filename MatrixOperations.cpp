@@ -27,10 +27,7 @@ vector<vector<double> > MMultiplication(vector<vector<double> > a, vector<vector
 		for (int j = 0; j < b[0].size(); j++) //j iterates b columns
 		{
 			for (int k = 0; k < a[0].size(); k++) { //k goes back to a and iterates its columns
-				cout << i << "x" << j << endl;
-
 				result[i][j] += a[i][k] * b[k][j]; //sums all multiplications into result[i][j]
-
 			}
 		}
 	}
