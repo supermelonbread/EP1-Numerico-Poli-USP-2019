@@ -43,9 +43,12 @@ using namespace std;
 		Redefina W, com w(i,j) = max{0, w(i,j)}
 	Fim do Repita
 	*/
-
-vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector<double>>& saidaH)
-{
+// realiza a fatoracao nao negativa da matriz de entrada
+// utiliza o algoritmo apresentado acima
+// a saida da funcao e a matriz Q
+// como entrada temos a matriz a ser fatorada, qual deve ser o valor de p
+// e a matriz saidaH se trata de um ponteiro que por deferenca ira fornecer o valor de H calculado
+vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector<double>>& saidaH) {
 	vector<vector<double>> W;
 	vector<vector<double>> A = matriz;
 	vector<vector<double>> H;
@@ -134,3 +137,92 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector
 	return W;
 }
 
+// Caso nao precise do H
+// O codigo e basicamente o mesmo
+vector<vector<double>> NMF(vector<vector<double>>& matriz, int p) {
+	vector<vector<double>> W;
+	vector<vector<double>> A = matriz;
+	vector<vector<double>> H;
+
+	W.resize(A.size());
+	for (int i = 0; i < A.size(); i++) {
+		W[i].resize(p);
+	}
+
+	//srand(time(NULL));
+
+	// inicializacao de W
+	for (int i = 0; i < W.size(); i++) {
+		for (int j = 0; j < W[0].size(); j++) {
+			W[i][j] = rand() % 40 + 1; // Inicializa W com um inteiro aleatorio de 1 a 40
+		}
+	}
+
+	double erro = 1;
+	double contador = 1;
+
+	for (int itmax = 0; erro > EPS && itmax < 100; itmax++) {
+		erro = 0;
+		A = matriz;
+		contador++;
+
+		// normaliza W
+		double s = 0; // norma da linha
+		for (int j = 0; j < W[0].size(); j++) {
+			double soma = 0;
+			for (int i = 0; i < W.size(); i++) {
+				soma += W[i][j] * W[i][j];
+			}
+			s = sqrt(soma);
+			for (int i = 0; i < W.size(); i++) {
+				W[i][j] = W[i][j] / s;
+			}
+		}
+
+		// resolucao do mmq
+		H = solucaoSimultaneos(W, A);
+
+
+		// Redefina H, com h(i,j) = max{0, h(i,j)}
+		for (int i = 0; i < H.size(); i++) {
+			for (int j = 0; j < H[0].size(); j++) {
+				if (H[i][j] < 0)
+					H[i][j] = 0;
+			}
+		}
+
+		// parte das transpostas
+		vector<vector<double>> At; // transposta de A
+		At = MTranspose(matriz);
+		vector<vector<double>> Ht; // transposta de H
+		Ht = MTranspose(H);
+		vector<vector<double>> Wt;
+
+		// resolucao do mmq
+		Wt = solucaoSimultaneos(Ht, At);
+
+		// Redefina W, com w(i,j) = max{0, w(i,j)}
+		for (int i = 0; i < Wt.size(); i++) {
+			for (int j = 0; j < Wt[0].size(); j++) {
+				if (Wt[i][j] < 0)
+					Wt[i][j] = 0;
+			}
+		}
+		W = MTranspose(Wt);
+
+
+		// calculo do erro
+		vector<vector<double>> Aerro;
+		Aerro = MMultiplication(W, H);
+		for (int i = 0; i < Aerro.size(); i++) {
+			for (int j = 0; j < Aerro[0].size(); j++) {
+				double erro_parcial = abs(Aerro[i][j] - matriz[i][j]);
+				if (erro_parcial > erro) {
+					erro = erro_parcial;
+				}
+			}
+		}
+	}
+
+	return W;
+}

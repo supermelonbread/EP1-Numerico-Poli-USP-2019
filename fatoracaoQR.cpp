@@ -31,18 +31,15 @@ using namespace std;
 
 */
 
-void QR(vector<vector<double> >& matriz)
-{
-	for (int k = 0; k < matriz[0].size(); k++)
-	{
-		for (int j = matriz.size() - 1; j > k; j--) 
-		{
+// a funcao segue o algoritmo apresentado acima
+// realiza a fatoracao QR da matriz de entrada
+void QR(vector<vector<double> >& matriz) {
+	for (int k = 0; k < matriz[0].size(); k++) {
+		for (int j = matriz.size() - 1; j > k; j--)  {
 			int i = j - 1;
-			if (abs(matriz[j][k]) > ZERO)
-			{
+			if (abs(matriz[j][k]) > ZERO) {
 				double cosseno, seno, temp;
-				if (abs(matriz[i][k]) > abs(matriz[j][k]))
-				{
+				if (abs(matriz[i][k]) > abs(matriz[j][k])) {
 					temp = -matriz[j][k] / matriz[i][k];
 					cosseno = 1 / sqrt(1 + temp * temp);
 					seno = cosseno * temp;
@@ -58,13 +55,13 @@ void QR(vector<vector<double> >& matriz)
 		}
 	}
 	// Zera os valores praticamente nulos
-	for (int i = 0; i < matriz[0].size(); i++) {
+	/*for (int i = 0; i < matriz[0].size(); i++) {
 		for (int j = 0; j < matriz.size(); j++) {
 			if (abs(matriz[j][i]) < ZERO) {
 				matriz[j][i] = 0;
 			}	
 		}
-	}
+	}*/
 }
 
 /*	Fatoração QR:
@@ -91,18 +88,18 @@ void QR(vector<vector<double> >& matriz)
 	cosseno = seno*τ
 
 */
+
+// utiliza a decomposicao QR para resolver um sistema determinado ou sobredeterminado
+// utiliza o algoritmo apresentado acima
 vector<double> solucaoSistemas(vector<vector<double> >& matriz, vector<double>& vetor)
 {
-	for (int k = 0; k < matriz[0].size(); k++)
-	{
-		for (int j = matriz.size() - 1; j > k; j--)
-		{
+	// parte 1: realiza a decomposicao QR na matriz e no vetor
+	for (int k = 0; k < matriz[0].size(); k++) {
+		for (int j = matriz.size() - 1; j > k; j--) {
 			int i = j - 1;
-			if (abs(matriz[j][k]) > ZERO)
-			{
+			if (abs(matriz[j][k]) > ZERO) {
 				double cosseno, seno, temp;
-				if (abs(matriz[i][k]) > abs(matriz[j][k]))
-				{
+				if (abs(matriz[i][k]) > abs(matriz[j][k])) {
 					temp = -matriz[j][k] / matriz[i][k];
 					cosseno = 1 / sqrt(1 + temp * temp);
 					seno = cosseno * temp;
@@ -117,29 +114,27 @@ vector<double> solucaoSistemas(vector<vector<double> >& matriz, vector<double>& 
 			}
 		}
 	}
+	// parte 2: resolve o sistema
 	vector<double> x;
 	x.resize(matriz[0].size());
-	for (int k = matriz[0].size() - 1; k >= 0; k--)
-	{
+	for (int k = matriz[0].size() - 1; k >= 0; k--) {
 		if (k == matriz[0].size() - 1) { x[k] = vetor[k] / matriz[k][k]; }
-		else
-		{
+		else {
 			double soma = 0;
-			for (int j = k + 1; j <= matriz[0].size() - 1; j++)
-			{
+			for (int j = k + 1; j <= matriz[0].size() - 1; j++) {
 				soma += matriz[k][j] * x[j] / matriz[k][k];
 			}
 			x[k] = vetor[k] / matriz[k][k] - soma;
 		}
 	}
 	// Zera os valores praticamente nulos
-	for (int i = 0; i < matriz[0].size(); i++) {
+	/*for (int i = 0; i < matriz[0].size(); i++) {
 		for (int j = 0; j < matriz.size(); j++) {
 			if (abs(matriz[j][i]) < ZERO) {
 				matriz[j][i] = 0;
 			}
 		}
-	}
+	}*/
 	return x;
 }
 
@@ -174,19 +169,17 @@ Com entrada A e W a saída é a matriz H que resolve o sistema pelo MMQ
 	cosseno = seno*τ
 
 */
-
-vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vector<double>>& A) 
-{
-	for (int k = 0; k < W[0].size(); k++)
-	{
-		for (int j = W.size() - 1; j > k; j--)
-		{
+// resolve multiplos sistemas (determinados ou sobredeterminados)
+// utiliza o algoritmo apresentado acima
+// caso similar com o anterior, mas agora temos uma matriz de valores para as equacoes, nao apenas um vetor
+vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vector<double>>& A) {
+	// Realiza a decomposicao QR
+	for (int k = 0; k < W[0].size(); k++){
+		for (int j = W.size() - 1; j > k; j--){
 			int i = j - 1;
-			if (abs(W[j][k]) > ZERO)
-			{
+			if (abs(W[j][k]) > ZERO){
 				double cosseno, seno, temp;
-				if (abs(W[i][k]) > abs(W[j][k]))
-				{
+				if (abs(W[i][k]) > abs(W[j][k])){
 					temp = -W[j][k] / W[i][k];
 					cosseno = 1 / sqrt(1 + temp * temp);
 					seno = cosseno * temp;
@@ -201,24 +194,21 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 			}
 		}
 	}
+	
+	// Resolve o sistema
+
 	vector<vector<double>> H;
 	H.resize(W[0].size()); // numero de linhas
-	for (int i = 0; i < H.size(); i++)
-	{
+	for (int i = 0; i < H.size(); i++){
 		H[i].resize(A[0].size()); // numero de colunas
 	}
-
-	for (int k = W[0].size() - 1; k >= 0; k--)
-	{
-		for (int j = 0; j < A[0].size(); j++)
-		{
+	for (int k = W[0].size() - 1; k >= 0; k--){
+		for (int j = 0; j < A[0].size(); j++){
 			if (k == W[0].size() - 1) 
 				H[k][j] = A[k][j] / W[k][k]; 
-			else
-			{
+			else{
 				double soma = 0;
-				for (int i = k + 1; i < W[0].size(); i++)
-				{
+				for (int i = k + 1; i < W[0].size(); i++){
 					soma += W[k][i] * H[i][j] / W[k][k];
 				}
 				H[k][j] = A[k][j] / W[k][k] - soma;
@@ -226,7 +216,7 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 		}
 	}
 	// Zera os valores praticamente nulos
-	for (int i = 0; i < W[0].size(); i++) {
+	/*for (int i = 0; i < W[0].size(); i++) {
 		for (int j = 0; j < W.size(); j++) {
 			if (abs(W[j][i]) < ZERO) {
 				W[j][i] = 0;
@@ -246,6 +236,6 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 				H[j][i] = 0;
 			}
 		}
-	}
+	}*/
 	return H;
 }

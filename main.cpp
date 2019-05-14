@@ -3,14 +3,22 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <chrono> // verificar quanto tempo leva para rodar
+#include <iomanip>// tirar essa biblioteca depois
 #include "fatoracaoQR.h"
 #include "MatrixOperations.h"
 #include "rotGivens.h"
 #include "fatoracaoNaoNeg.h"
+#include "preProcessamento.h"
 
 using namespace std;
+using namespace std::chrono;
 
 int main() {
+
+	auto start = chrono::high_resolution_clock::now();
+	// unsync the I/O of C and C++. 
+	ios_base::sync_with_stdio(false);
 
 	vector<vector<double> > a;
 
@@ -26,15 +34,9 @@ int main() {
 	}
 	//Now you have matrix m*n with default values
 
-	//you can use the Matrix, now
-	//a[0] = { 2, 1, 1, -1, 1 };
-	//a[1] = { 0, 3, 0, 1, 2 };
-	//a[2] = { 0, 0, 2, 2, -1 };
-	//a[3] = { 0, 0, -1, 1, 2 };
-	//a[4] = { 0, 0, 0, 3, 1 };
-	a[0] = { 0.3, 0.6, 0 };
-	a[1] = { 0.5, 0, 1 };
-	a[2] = { 0.4, 0.8, 0 };
+	//a[0] = { 0.3, 0.6, 0 };
+	//a[1] = { 0.5, 0, 1 };
+	//a[2] = { 0.4, 0.8, 0 };
 
 
 	//for (int i = 0; i < m; i++) {
@@ -69,13 +71,13 @@ int main() {
 		}
 	}*/
 
-	cout << "Matriz inicial: " << endl;
-	for (int i = 0; i < m; i++) {
-		for (int j = 0; j < n; j++) {
-			cout << a[i][j] << " ";
-		}
-		cout << endl;
-	}
+	//cout << "Matriz inicial: " << endl;
+	//for (int i = 0; i < m; i++) {
+	//	for (int j = 0; j < n; j++) {
+	//		cout << a[i][j] << " ";
+	//	}
+	//	cout << endl;
+	//}
 
 	
 	//cout << "B inicial: " << endl;
@@ -89,35 +91,49 @@ int main() {
 	vector<vector<double>> x;
 
 	// IMPORTANTE LEMBRAR DISSO
-	cout << endl << "Numero de colunas: " << a[0].size() << endl;
-	cout << "Numero de linhas: " << a.size() << endl;
+	//cout << endl << "Numero de colunas: " << a[0].size() << endl;
+	//cout << "Numero de linhas: " << a.size() << endl;
 
-	b = NMF(a, 2, x);
+	b = adquireImagem("train_dig5.txt", 28, 28, 10);
 
-	cout << endl << "Matriz final: " << endl;
-	for (int i = 0; i < m; i++) {
-		for (int j = 0; j < n; j++) {
-			cout << a[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
+	//cout << endl << "Matriz final: " << endl;
+	//for (int i = 0; i < m; i++) {
+	//	for (int j = 0; j < n; j++) {
+	//		cout << a[i][j] << " ";
+	//	}
+	//	cout << endl;
+	//}
+	//cout << endl;
 
 	cout << "B final: " << endl;
-	for (int i = 0; i < m; i++) {
-		for (int j = 0; j < p; j++) {
-			cout << b[i][j] << " ";
-		}
-		cout << endl;
-	}
+	//for (int i = 0; i < b.size(); i++) {
+	//	for (int j = 0; j < b[0].size(); j++) {
+	//		cout << b[i][j] << " ";
+	//	}
+	//	cout << endl;
+	//}
+
+	x = aprendizagem("saida.txt", b, 3, 28, 28, 10);
 
 	cout << "Solucao: " << endl;
-	for (int i = 0; i < x.size(); i++) {
-		for (int j = 0; j < x[0].size(); j++) {
-			cout << x[i][j] << " ";
-		}
-		cout << endl;
-	}
+	//for (int i = 0; i < x.size(); i++) {
+	//	for (int j = 0; j < x[0].size(); j++) {
+	//		cout << x[i][j] << " ";
+	//	}
+	//	cout << endl;
+	//}
+
+
+	auto end = chrono::high_resolution_clock::now();
+
+	// Calculating total time taken by the program. 
+	double time_taken =
+		chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+	time_taken *= 1e-9;
+
+	cout << "Time taken by program is : " << fixed
+		<< time_taken << setprecision(9);
+	cout << " sec" << endl;
 
 	return 0;
 }
