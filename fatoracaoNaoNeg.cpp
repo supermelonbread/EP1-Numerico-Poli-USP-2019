@@ -167,9 +167,11 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz, int p) {
 		contador++;
 
 		// normaliza W
+
+		double soma = 0;
 		double s = 0; // norma da linha
 		for (int j = 0; j < W[0].size(); j++) {
-			double soma = 0;
+			soma = 0;
 			for (int i = 0; i < W.size(); i++) {
 				soma += W[i][j] * W[i][j];
 			}
