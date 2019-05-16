@@ -154,6 +154,9 @@ int main() {
 	Aprende("treino_d9_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 9 feito \n");
 	
+	//acerto("treino_d0_p5_treino100.txt", "treino_d1_p5_treino100.txt", "treino_d2_p5_treino100.txt", "treino_d3_p5_treino100.txt",
+	//	"treino_d4_p5_treino100.txt", "treino_d5_p5_treino100.txt", "treino_d6_p5_treino100.txt", "treino_d7_p5_treino100.txt", "treino_d8_p5_treino100.txt",
+	//	"treino_d9_p5_treino100.txt", "test_images.txt", "test_index.txt", tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
 
 	//cout << endl << "Matriz final: " << endl;
 	//for (int i = 0; i < m; i++) {

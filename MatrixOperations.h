@@ -10,4 +10,4 @@ vector<vector<double> > MMultiplication(vector<vector<double>> a, vector<vector<
 
 vector<vector<double> > MTranspose(vector<vector<double> > a);
 
-#endif #pragma once
+#endif 

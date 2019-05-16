@@ -18,10 +18,11 @@ using namespace std;
 void Givens(vector< vector<double> >& matriz, int i, int j, double teta)
 {
 	vector<vector<double>> temp = matriz;
-	for (int k = 0; k < matriz[i].size(); k++) { 
+	int tamCol = matriz[0].size();
+	for (int k = 0; k < tamCol; k++) { 
 		matriz[i][k] = cos(teta) * temp[i][k] - sin(teta) * temp[j][k]; 
 	}
-	for (int k = 0; k < matriz[i].size(); k++) { 
+	for (int k = 0; k < tamCol; k++) {
 		matriz[j][k] = cos(teta) * temp[j][k] + sin(teta) * temp[i][k]; 
 	}
 }
@@ -29,11 +30,13 @@ void Givens(vector< vector<double> >& matriz, int i, int j, double teta)
 // realiza a rotacao de givens dado um valor para seno e cosseno
 void Givens(vector<vector<double> >& matriz, int i, int j, double seno, double cosseno)
 {
+	
 	vector<vector<double>> temp = matriz;
-	for (int k = 0; k < matriz[i].size(); k++) { 
+	int tamColMatriz = matriz[0].size();
+	for (int k = 0; k < tamColMatriz; k++) {
 		matriz[i][k] = cosseno * temp[i][k] - seno * temp[j][k]; 
 	}
-	for (int k = 0; k < matriz[i].size(); k++) {
+	for (int k = 0; k < tamColMatriz; k++) {
 		matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; 
 	}
 }
@@ -45,14 +48,15 @@ void Givens(vector<vector<double> >& matriz, vector<double>& vetor, int i, int j
 {
 	vector<vector<double>> temp = matriz;
 	vector<double> tempvec = vetor;
-	for (int k = 0; k < matriz[i].size(); k++) { 
+	int tamCol = matriz[0].size();
+	for (int k = 0; k < tamCol; k++) {
 		matriz[i][k] = cosseno * temp[i][k] - seno * temp[j][k]; 
 	}
 
 	// realizo no vetor B a mesma alteracao feita na matriz A
 	vetor[i] = cosseno * tempvec[i] - seno * tempvec[j];
 
-	for (int k = 0; k < matriz[i].size(); k++) { 
+	for (int k = 0; k < tamCol; k++) {
 		matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; 
 	}
 
@@ -68,15 +72,17 @@ void Givens(vector<vector<double>>& matriz, vector<vector<double>>& matriz2, int
 {
 	vector<vector<double>> temp = matriz;
 	vector<vector<double>> tempmat = matriz2;
+	int tamCol = matriz[0].size();
+	int tamCol2 = matriz2[0].size();
 
 	// alteracoes feitas na matriz A e B sao as mesmas, em loops diferente pois podem possuir tamanhos diferentes
-	for (int k = 0; k < matriz[i].size(); k++) 
+	for (int k = 0; k < tamCol; k++)
 		matriz[i][k] = cosseno * temp[i][k] - seno * temp[j][k]; 
-	for (int k = 0; k < matriz2[i].size(); k++)
+	for (int k = 0; k < tamCol2; k++)
 		matriz2[i][k] = cosseno * tempmat[i][k] - seno * tempmat[j][k];
 	
-	for (int k = 0; k < matriz[i].size(); k++) 
+	for (int k = 0; k < tamCol; k++)
 		matriz[j][k] = cosseno * temp[j][k] + seno * temp[i][k]; 
-	for (int k = 0; k < matriz2[i].size(); k++)
+	for (int k = 0; k < tamCol2; k++)
 		matriz2[j][k] = cosseno * tempmat[j][k] + seno * tempmat[i][k];
 }

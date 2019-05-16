@@ -49,41 +49,41 @@ using namespace std;
 // como entrada temos a matriz a ser fatorada, qual deve ser o valor de p
 // e a matriz saidaH se trata de um ponteiro que por deferenca ira fornecer o valor de H calculado
 vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector<double>>& saidaH) {
-	vector<vector<double>> W;
 	vector<vector<double>> A = matriz;
+	vector<vector<double>> W(A.size(), vector<double>(p));
 	vector<vector<double>> H;
 
-	W.resize(A.size());
-	for (int i = 0; i < A.size(); i++) {
-		W[i].resize(p);
-	}
+	//W.resize(A.size());
+	//for (int i = 0; i < A.size(); i++) {
+	//	W[i].resize(p);
+	//}
 
 	//srand(time(NULL));
-
+	int tamLinW = W.size();
+	int tamColW = W[0].size();
 	// inicializacao de W
-	for (int i = 0; i < W.size(); i++) {
-		for (int j = 0; j < W[0].size(); j++) {
-			W[i][j] =  rand()%40 +1 ; // Inicializa W com um inteiro aleatorio de 1 a 40
+	for (int i = 0; i < tamLinW; i++) {
+		for (int j = 0; j < tamColW; j++) {
+			W[i][j] =  rand()%40; // Inicializa W com um inteiro aleatorio de 1 a 40
+			W[i][j]++; // para impedir valores nulos
 		}
 	}
 
 	double erro = 1;
-	double contador = 1;
 
 	for (int itmax = 0; erro > EPS && itmax < 100; itmax++) {
 		erro = 0;
-		A = matriz;
-		contador++;
+		A = matriz; // devo pegar esse valor em toda iteracao
 
 		// normaliza W
 		double s = 0; // norma da linha
-		for (int j = 0; j < W[0].size(); j++) {
+		for (int j = 0; j < tamColW; j++) {
 			double soma = 0;
-			for (int i = 0; i < W.size(); i++) {
+			for (int i = 0; i < tamLinW; i++) {
 				soma += W[i][j] * W[i][j];
 			}
 			s = sqrt(soma);
-			for (int i = 0; i < W.size(); i++) {
+			for (int i = 0; i < tamLinW; i++) {
 				W[i][j] = W[i][j] / s;
 			}
 		}
@@ -91,11 +91,12 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector
 		// resolucao do mmq
 		H = solucaoSimultaneos(W, A);
 
-
+		int tamLinH = H.size();
+		int tamColH = H[0].size();
 		// Redefina H, com h(i,j) = max{0, h(i,j)}
-		for (int i = 0; i < H.size(); i++) {
-			for (int j = 0; j < H[0].size(); j++) {
-				if (H[i][j] < 0) 
+		for (int i = 0; i < tamLinH; i++) {
+			for (int j = 0; j < tamColH; j++) {
+				if (H[i][j] < EPS) 
 					H[i][j] = 0;
 			}
 		}
@@ -110,10 +111,12 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector
 		// resolucao do mmq
 		Wt = solucaoSimultaneos(Ht, At);
 
+		int tamLinWt = Wt.size();
+		int tamColWt = Wt[0].size();
 		// Redefina W, com w(i,j) = max{0, w(i,j)}
-		for (int i = 0; i < Wt.size(); i++) {
-			for (int j = 0; j < Wt[0].size(); j++) {
-				if (Wt[i][j] < 0)
+		for (int i = 0; i < tamLinWt; i++) {
+			for (int j = 0; j < tamColWt; j++) {
+				if (Wt[i][j] < EPS)
 					Wt[i][j] = 0;
 			}
 		}
@@ -123,9 +126,13 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector
 		// calculo do erro
 		vector<vector<double>> Aerro; 
 		Aerro = MMultiplication(W, H);
-		for (int i = 0; i < Aerro.size(); i++) {
-			for (int j = 0; j < Aerro[0].size(); j++) {
-				double erro_parcial = abs(Aerro[i][j] - matriz[i][j]);
+		int tamLinAerro = Aerro.size();
+		int tamColAerro = Aerro[0].size();
+		double erro_parcial;
+
+		for (int i = 0; i < tamLinAerro; i++) {
+			for (int j = 0; j < tamColAerro; j++) {
+				erro_parcial = abs(Aerro[i][j] - matriz[i][j]);
 				if (erro_parcial > erro) {
 					erro = erro_parcial;
 				}
@@ -140,43 +147,41 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz,  int p, vector<vector
 // Caso nao precise do H
 // O codigo e basicamente o mesmo
 vector<vector<double>> NMF(vector<vector<double>>& matriz, int p) {
-	vector<vector<double>> W;
 	vector<vector<double>> A = matriz;
+	vector<vector<double>> W(A.size(), vector<double>(p));
 	vector<vector<double>> H;
 
-	W.resize(A.size());
-	for (int i = 0; i < A.size(); i++) {
-		W[i].resize(p);
-	}
+	//W.resize(A.size());
+	//for (int i = 0; i < A.size(); i++) {
+	//	W[i].resize(p);
+	//}
 
 	//srand(time(NULL));
-
+	int tamLinW = W.size();
+	int tamColW = W[0].size();
 	// inicializacao de W
-	for (int i = 0; i < W.size(); i++) {
-		for (int j = 0; j < W[0].size(); j++) {
-			W[i][j] = rand() % 40 + 1; // Inicializa W com um inteiro aleatorio de 1 a 40
+	for (int i = 0; i < tamLinW; i++) {
+		for (int j = 0; j < tamColW; j++) {
+			W[i][j] = rand() % 40; // Inicializa W com um inteiro aleatorio de 1 a 40
+			W[i][j]++; // para impedir valores nulos
 		}
 	}
 
 	double erro = 1;
-	double contador = 1;
 
 	for (int itmax = 0; erro > EPS && itmax < 100; itmax++) {
 		erro = 0;
-		A = matriz;
-		contador++;
+		A = matriz; // devo pegar esse valor em toda iteracao
 
 		// normaliza W
-
-		double soma = 0;
 		double s = 0; // norma da linha
-		for (int j = 0; j < W[0].size(); j++) {
-			soma = 0;
-			for (int i = 0; i < W.size(); i++) {
+		for (int j = 0; j < tamColW; j++) {
+			double soma = 0;
+			for (int i = 0; i < tamLinW; i++) {
 				soma += W[i][j] * W[i][j];
 			}
 			s = sqrt(soma);
-			for (int i = 0; i < W.size(); i++) {
+			for (int i = 0; i < tamLinW; i++) {
 				W[i][j] = W[i][j] / s;
 			}
 		}
@@ -184,11 +189,12 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz, int p) {
 		// resolucao do mmq
 		H = solucaoSimultaneos(W, A);
 
-
+		int tamLinH = H.size();
+		int tamColH = H[0].size();
 		// Redefina H, com h(i,j) = max{0, h(i,j)}
-		for (int i = 0; i < H.size(); i++) {
-			for (int j = 0; j < H[0].size(); j++) {
-				if (H[i][j] < 0)
+		for (int i = 0; i < tamLinH; i++) {
+			for (int j = 0; j < tamColH; j++) {
+				if (H[i][j] < EPS)
 					H[i][j] = 0;
 			}
 		}
@@ -203,10 +209,12 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz, int p) {
 		// resolucao do mmq
 		Wt = solucaoSimultaneos(Ht, At);
 
+		int tamLinWt = Wt.size();
+		int tamColWt = Wt[0].size();
 		// Redefina W, com w(i,j) = max{0, w(i,j)}
-		for (int i = 0; i < Wt.size(); i++) {
-			for (int j = 0; j < Wt[0].size(); j++) {
-				if (Wt[i][j] < 0)
+		for (int i = 0; i < tamLinWt; i++) {
+			for (int j = 0; j < tamColWt; j++) {
+				if (Wt[i][j] < EPS)
 					Wt[i][j] = 0;
 			}
 		}
@@ -216,9 +224,13 @@ vector<vector<double>> NMF(vector<vector<double>>& matriz, int p) {
 		// calculo do erro
 		vector<vector<double>> Aerro;
 		Aerro = MMultiplication(W, H);
-		for (int i = 0; i < Aerro.size(); i++) {
-			for (int j = 0; j < Aerro[0].size(); j++) {
-				double erro_parcial = abs(Aerro[i][j] - matriz[i][j]);
+		int tamLinAerro = Aerro.size();
+		int tamColAerro = Aerro[0].size();
+		double erro_parcial;
+
+		for (int i = 0; i < tamLinAerro; i++) {
+			for (int j = 0; j < tamColAerro; j++) {
+				erro_parcial = abs(Aerro[i][j] - matriz[i][j]);
 				if (erro_parcial > erro) {
 					erro = erro_parcial;
 				}
