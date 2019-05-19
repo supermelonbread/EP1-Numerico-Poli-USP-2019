@@ -10,8 +10,7 @@
 #include "rotGivens.h"
 #include "fatoracaoNaoNeg.h"
 #include "preProcessamento.h"
-#include <thread> // biblioteca para trabalhar em paralelo
-//#include <amp.h> // biblioteca para trabalhar em paralelo
+
 
 #define numeroLinhas 28
 #define numeroColunas 28
@@ -28,160 +27,97 @@ int main() {
 	// unsync the I/O of C and C++. 
 	ios_base::sync_with_stdio(false);
 
-	vector<vector<double> > a;
 
-	//m * n is the size of the matrix
-
-	//int m = 3, n = 3;
-	////Grow rows by m
-	//a.resize(m);
-	//for (int i = 0; i < m; i++)
-	//{
-	//	//Grow Columns by n
-	//	a[i].resize(n);
-	//}
-	//Now you have matrix m*n with default values
-
-	//a[0] = { 0.3, 0.6, 0 };
-	//a[1] = { 0.5, 0, 1 };
-	//a[2] = { 0.4, 0.8, 0 };
+	int m = 700;
+	int n = 100;
+	vector<vector<double>> W(m, vector<double>(n));
+	vector<double> b(n);
+	vector<double> x(n);
+	int k = 0;
+	double a;
 
 
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		if (abs(i - j) < 5) {
-	//			double soma = i + j + 1;
-	//			a[i][j] = 1 / soma;
-	//		}
-	//		else if (abs(i - j) > 4)
-	//			a[i][j] = 0;
-	//		else
-	//			a[i][j] = 0;
-	//	}
-	//}
-
-	// b é m * p
-	vector<vector<double>> b;
-	/*int p = 2;
-	b.resize(m);
-	for (int i = 0; i < m; i++)
-		b[i].resize(p);*/
-	//b = { 1, 2, 4, 8 };
-	//b = { 1,2 };
-	/*for (int i = 0; i < m; i++) {
-		for (int j = 0; j < p; j++) {
-			if (j == 0)
-				b[i][j] = 1;
-			else if (j == 1) 
-				b[i][j] = (i + 1);
-			else if (j == 2)
-				b[i][j] = 2 * (i + 1) - 1;
+    for (int i = 0; i < W.size(); i++) {
+		for (int j = 0; j < W[0].size(); j++) {
+            a = rand() %50;
+            W[i][j]  = a/50;
 		}
-	}*/
+	}
 
-	//cout << "Matriz inicial: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		cout << a[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
 
-	
-	//cout << "B inicial: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < p; j++) {
-	//		cout << b[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-	
-	vector<vector<double>> x;
+	printf("Matriz Inicial: \n");
+//	W = preProcessaImagem("teste.txt", 3, 1, 3);
 
-	// IMPORTANTE LEMBRAR DISSO
-	//cout << endl << "Numero de colunas: " << a[0].size() << endl;
-	//cout << "Numero de linhas: " << a.size() << endl;
+	vector<vector<double>> A;
+	vector<vector<double>> B;
 
-	
-	// treinamento
-	b = adquireImagem("train_dig0.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig0 \n");
-	Aprende("treino_d0_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 0 feito \n");
+//	for (int i = 0; i < W.size(); i++) {
+//		cout << "|";
+//		for (int j = 0; j < W[0].size(); j++) {
+//			cout << " " << W[i][j] << " ";
+//		}
+//		cout << "|" << endl;
+//	}
+/*
+	printf("Vetor B: \n");
 
-	b = adquireImagem("train_dig1.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig1 \n");
-	Aprende("treino_d1_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 1 feito \n");
+	for (int k = 0; k < b.size(); k++) {
+		cout << b[k] << " ";
+	}
 
-	b = adquireImagem("train_dig2.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig2 \n");
-	Aprende("treino_d2_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 2 feito \n");
+	cout << endl;
+	*/
+    //A = aprendizagem("saida.txt", W, 2, 3, 3, 1);
+    A = NMF(W, 5, B);
+    printf("Matriz 1: \n");
 
-	b = adquireImagem("train_dig3.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig3 \n");
-	Aprende("treino_d3_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 3 feito \n");
+//	for (int i = 0; i < A.size(); i++) {
+//		cout << "|";
+//		for (int j = 0; j < A[0].size(); j++) {
+//			cout << " " << A[i][j] << " ";
+//		}
+//		cout << "|" << endl;
+//	}
+//
+//	printf("Matriz 2: \n");
+//
+//	for (int i = 0; i < B.size(); i++) {
+//		cout << "|";
+//		for (int j = 0; j < B[0].size(); j++) {
+//			cout << " " << B[i][j] << " ";
+//		}
+//		cout << "|" << endl;
+//	}
+//
+//	vector<vector<double>> M;
+//	M = MMultiplication(A, B);
+//
+//	printf("\n Matriz Multiplicada: \n");
+//
+//	for (int i = 0; i < M.size(); i++) {
+//		cout << "|";
+//		for (int j = 0; j < M[0].size(); j++) {
+//			cout << " " << M[i][j] << " ";
+//		}
+//		cout << "|" << endl;
+//	}
+/*
+	printf("Vetor B modificado: \n");
 
-	b = adquireImagem("train_dig4.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig4 \n");
-	Aprende("treino_d4_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 4 feito \n");
+	for (int k = 0; k < b.size(); k++) {
+		cout << b[k] << " ";
 
-	b = adquireImagem("train_dig5.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig5 \n");
-	Aprende("treino_d5_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 5 feito \n");
+	}
+	cout << endl;
 
-	b = adquireImagem("train_dig6.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig6 \n");
-	Aprende("treino_d6_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 6 feito \n");
+	printf("Vetor X: \n");
 
-	b = adquireImagem("train_dig7.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig7 \n");
-	Aprende("treino_d7_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 7 feito \n");
+	for (int i = 0; i < x.size(); i++) {
+		cout << x[i] << " ";
+	}
 
-	b = adquireImagem("train_dig8.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig8 \n");
-	Aprende("treino_d8_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 8 feito \n");
-
-	b = adquireImagem("train_dig9.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig9 \n");
-	Aprende("treino_d9_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 9 feito \n");
-	
-	//acerto("treino_d0_p5_treino100.txt", "treino_d1_p5_treino100.txt", "treino_d2_p5_treino100.txt", "treino_d3_p5_treino100.txt",
-	//	"treino_d4_p5_treino100.txt", "treino_d5_p5_treino100.txt", "treino_d6_p5_treino100.txt", "treino_d7_p5_treino100.txt", "treino_d8_p5_treino100.txt",
-	//	"treino_d9_p5_treino100.txt", "test_images.txt", "test_index.txt", tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
-
-	//cout << endl << "Matriz final: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		cout << a[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-	//cout << endl;
-
-	/*cout << "B final: " << endl;*/
-	//for (int i = 0; i < b.size(); i++) {
-	//	for (int j = 0; j < b[0].size(); j++) {
-	//		cout << b[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-
-	/*cout << "Solucao: " << endl;*/
-	//for (int i = 0; i < x.size(); i++) {
-	//	for (int j = 0; j < x[0].size(); j++) {
-	//		cout << x[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
+	cout << endl;
+*/
 
 
 	auto end = chrono::high_resolution_clock::now();

@@ -1,4 +1,4 @@
-﻿#include "preProcessamento.h"
+#include "preProcessamento.h"
 #include "fatoracaoNaoNeg.h"
 #include "fatoracaoQR.h"
 #include "MatrixOperations.h"
@@ -40,7 +40,7 @@ vector<vector<double>> preProcessaImagem(string nomeDoArquivo, int numLinhas, in
 		cout << endl <<"Nao foi possivel abrir o arquivo" << endl;
 		return vector<vector<double>> ();
 	}
-	
+
 	// declaracao da matriz A
 	int numLinA = numLinhas * numColunas;
 	vector<vector<double>> A (numLinA, vector<double>(numImagens));
@@ -121,7 +121,7 @@ vector<vector<double>> aprendizagem(string nomeDoArquivo, vector<vector<double>>
 		return vector<vector<double>>();
 	}
 
-	
+
 
 	// obter W
 
@@ -207,10 +207,10 @@ void Aprende(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinha
 }
 /*
 Apos a fase de treinamento com ndig treino deve-se usar o conjunto de testes para se aferir o porcentual de acerto dos classificadores.
-As imagens que serao usadas para os testes devem ser lidas do arquivo test images.txt e armazenadas em uma matriz A com 784 linhas e n test colunas, 
+As imagens que serao usadas para os testes devem ser lidas do arquivo test images.txt e armazenadas em uma matriz A com 784 linhas e n test colunas,
 sendo 10000 o numero de imagens neste arquivo, e portanto o maximo valor possıvel para o numero de imagens n test que se deseja testar.
 
-Para cada dıgito devemos resolver o sistema WdH = A, no sentido de m´ınimos quadrados, onde H e uma matriz p × n test 
+Para cada dıgito devemos resolver o sistema WdH = A, no sentido de m´ınimos quadrados, onde H e uma matriz p × n test
 (atraves do metodo de fatoracao QR da matriz Wd correspondente - veja a secao sobre sistemas simultaneos).
 
 Calculamos entao, para cada coluna cj de A−WdH sua norma euclidiana (||cj || = SQRT(Soma de 1 a 784 de c(i,j)^2)
@@ -229,38 +229,14 @@ para cada uma das n test imagens teste.
 */
 
 // funcao para realizar os testes e verificar a taxa de acertos
-void acerto(string arquivoD0, string arquivoD1, string arquivoD2, string arquivoD3, string arquivoD4,
-	string arquivoD5, string arquivoD6, string arquivoD7, string arquivoD8, string arquivoD9,
-	string arquivoTestes, string arquivoIndices, int p, int numLinhas, int numColunas, int n_teste) {
+void acerto(string arquivoDigito, vector<vector<double>> A, vector<double> erro, vector<double> indice,int p, int numLinhas, int numColunas, int n_teste) {
 
 	if (n_teste > 10000) {
 		cout << endl << "Numero de teste invalido" << endl;
 		return;
 	}
 
-	// adquire a matriz com os valores a serem classificados
-	int numLinA = numColunas * numLinhas;
-	vector<vector<double>> A(numLinA, vector<double>(n_teste)); // declaracao da matriz A
-	/*A.resize(numLinA);
-	for (int i = 0; i < numLinA; i++)
-		A[i].resize(n_teste);*/
-
-	fstream inputA(arquivoTestes, ios::in); // Abertura do arquivo
-	if (!inputA.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo de Testes" << endl;
-		return;
-	}
-
-	double temp;
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz A
-		for (int j = 0; j < n_teste && !(inputA.eof()); j++) {
-			inputA >> temp;
-			A[i][j] = temp / 255;
-		}
-		inputA.ignore(99999999, '\n');
-	}
-
-	inputA.close();
+	
 	vector<vector<double>> salvaA; // matriz para deixar sempre salvo os valores a serem testados
 	salvaA = A;
 
@@ -272,12 +248,12 @@ void acerto(string arquivoD0, string arquivoD1, string arquivoD2, string arquivo
 	vector<vector<double>> erro(n_teste, vector<double>(2, 0)); // matriz onde sera salvo qual provavelmente e aquele digito, inicialmente recebera 0 em todas suas casas
 
 	// resolvendo o sistema para o digito 0
-	fstream input0(arquivoD0, ios::in);
+	fstream input0(arquivoDigito, ios::in);
 	if (!input0.is_open()) {
 		cout << endl << "Nao foi possivel abrir o arquivo do D0" << endl;
 		return;
 	}
-	
+
 	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
 		for (int j = 0; j < p && !(input0.eof()); j++) {
 			input0 >> W[i][j];
@@ -293,9 +269,9 @@ void acerto(string arquivoD0, string arquivoD1, string arquivoD2, string arquivo
 
 	vector<vector<double>> produto;
 	produto = MMultiplication(W, H); // produto de W e H
-	
+
 	vector<vector<double>> subtracao(produto.size(), vector<double>(produto[0].size())); // Matriz para salvar A - WH
-	 
+
 	int tamColProd = produto[0].size();
 	int tamLinProd = produto.size();
 	for (int j = 0; j < tamColProd; j++) {
@@ -311,375 +287,5 @@ void acerto(string arquivoD0, string arquivoD1, string arquivoD2, string arquivo
 		// nao preciso atribuir o erro[1][j] = 0 pois ja foi feito na declaracao
 	}
 
-	// resolvendo o sistema para o digito 1
-	fstream input1(arquivoD1, ios::in);
-	if (!input1.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D1" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input1.eof()); j++) {
-			input1 >> W[i][j];
-		}
-		input1.ignore(99999999, '\n');
-	}
-	input1.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) { // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 1;
-		}
-	}
-
-	// resolvendo o sistema para o digito 2
-	fstream input2(arquivoD2, ios::in);
-	if (!input2.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D2" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input2.eof()); j++) {
-			input2 >> W[i][j];
-		}
-		input2.ignore(99999999, '\n');
-	}
-	input2.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 2;
-		}
-	}
-
-	// resolvendo o sistema para o digito 3
-	fstream input3(arquivoD3, ios::in);
-	if (!input3.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D3" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input3.eof()); j++) {
-			input3 >> W[i][j];
-		}
-		input3.ignore(99999999, '\n');
-	}
-	input3.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 3;
-		}
-	}
-
-	// resolvendo o sistema para o digito 4
-	fstream input4(arquivoD4, ios::in);
-	if (!input4.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D4" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input4.eof()); j++) {
-			input4 >> W[i][j];
-		}
-		input4.ignore(99999999, '\n');
-	}
-	input4.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 4;
-		}
-	}
-
-	// resolvendo o sistema para o digito 5
-	fstream input5(arquivoD5, ios::in);
-	if (!input5.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D5" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input5.eof()); j++) {
-			input5 >> W[i][j];
-		}
-		input5.ignore(99999999, '\n');
-	}
-	input5.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 5;
-		}
-	}
-
-	// resolvendo o sistema para o digito 6
-	fstream input6(arquivoD6, ios::in);
-	if (!input6.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D6" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input6.eof()); j++) {
-			input6 >> W[i][j];
-		}
-		input6.ignore(99999999, '\n');
-	}
-	input6.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 6;
-		}
-	}
-
-	// resolvendo o sistema para o digito 7
-	fstream input7(arquivoD7, ios::in);
-	if (!input7.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D7" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input7.eof()); j++) {
-			input7 >> W[i][j];
-		}
-		input7.ignore(99999999, '\n');
-	}
-	input7.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 7;
-		}
-	}
-
-	// resolvendo o sistema para o digito 8
-	fstream input8(arquivoD8, ios::in);
-	if (!input8.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D8" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input8.eof()); j++) {
-			input8 >> W[i][j];
-		}
-		input8.ignore(99999999, '\n');
-	}
-	input8.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 8;
-		}
-	}
-
-	// resolvendo o sistema para o digito 9
-	fstream input9(arquivoD9, ios::in);
-	if (!input9.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D9" << endl;
-		return;
-	}
-
-	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
-		for (int j = 0; j < p && !(input9.eof()); j++) {
-			input9 >> W[i][j];
-		}
-		input9.ignore(99999999, '\n');
-	}
-	input9.close();
-
-	H = solucaoSimultaneos(W, A); // solucao do sistema
-	A = salvaA;
-	produto = MMultiplication(W, H); // produto de W e H
-
-	for (int j = 0; j < tamColProd; j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < tamLinProd; i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
-		}
-		s = sqrt(soma);
-		if (s < erro[j][0]) {  // caso o erro seja menor, atualiza o erro
-			erro[j][0] = s;
-			erro[j][1] = 9;
-		}
-	}
-
-	// agora como ja sabemos como foi identificado cada digito
-	// podemos verificar com o gabarito
-
-	vector<double> gabarito(n_teste);
-	fstream inputGabarito(arquivoD9, ios::in);
-	if (!inputGabarito.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo dos Indices" << endl;
-		return;
-	}
-
-	for (int j = 0; j < n_teste && !(inputGabarito.eof()); j++) {
-		inputGabarito >> gabarito[j];
-	}
-	inputGabarito.close();
-
-	double acertos0 = 0;
-	double acertos1 = 0;
-	double acertos2 = 0;
-	double acertos3 = 0;
-	double acertos4 = 0;
-	double acertos5 = 0;
-	double acertos6 = 0;
-	double acertos7 = 0;
-	double acertos8 = 0;
-	double acertos9 = 0;
-	for (int i = 0; i < n_teste; i++) {
-		if (gabarito[i] == erro[i][1]) {
-			if (gabarito[i] == 0) {
-				acertos0++;
-			}
-			else if (gabarito[i] == 1) {
-				acertos1++;
-			}
-			else if (gabarito[i] == 2) {
-				acertos2++;
-			}
-			else if (gabarito[i] == 3) {
-				acertos3++;
-			}
-			else if (gabarito[i] == 4) {
-				acertos4++;
-			}
-			else if (gabarito[i] == 5) {
-				acertos5++;
-			}
-			else if (gabarito[i] == 6) {
-				acertos6++;
-			}
-			else if (gabarito[i] == 7) {
-				acertos7++;
-			}
-			else if (gabarito[i] == 8) {
-				acertos8++;
-			}
-			else if (gabarito[i] == 9) {
-				acertos9++;
-			}
-		}
-	}
-
-	double acertosTotal = acertos0 + acertos1 + acertos2 + acertos3 + acertos4 + acertos5 + acertos6 + acertos7 + acertos8 + acertos9;
-	cout << endl << "Acertos dig0: " << acertos0 << endl;
-	cout << "Acertos dig1: " << acertos1 << endl;
-	cout << "Acertos dig2: " << acertos2 << endl;
-	cout << "Acertos dig3: " << acertos3 << endl;
-	cout << "Acertos dig4: " << acertos4 << endl;
-	cout << "Acertos dig5: " << acertos5 << endl;
-	cout << "Acertos dig6: " << acertos6 << endl;
-	cout << "Acertos dig7: " << acertos7 << endl;
-	cout << "Acertos dig8: " << acertos8 << endl;
-	cout << "Acertos dig9: " << acertos9 << endl;
-	cout << "Acertos Total: " << acertosTotal << endl;
-	cout << "Total de Testes: " << n_teste << endl;
-
 }
+
