@@ -1,4 +1,4 @@
-﻿#include "preProcessamento.h"
+#include "preProcessamento.h"
 #include "fatoracaoNaoNeg.h"
 #include "fatoracaoQR.h"
 #include "MatrixOperations.h"
@@ -40,15 +40,15 @@ vector<vector<double>> preProcessaImagem(string nomeDoArquivo, int numLinhas, in
 		cout << endl <<"Nao foi possivel abrir o arquivo" << endl;
 		return vector<vector<double>> ();
 	}
-	
+
 	// declaracao da matriz A
-	vector<vector<double>> A;
 	int numLinA = numLinhas * numColunas;
-	A.resize(numLinA);
-	for (int i = 0; i < A.size(); i++){
+	vector<vector<double>> A (numLinA, vector<double>(numImagens));
+	//A.resize(numLinA);
+	/*for (int i = 0; i < A.size(); i++){
 		A[i].resize(numImagens);
 	}
-
+*/
 	// ler do arquivo e armazenar na matriz A diretamente do arquivo e divide o valor por 255
 	// repare que essa funcao serve para o caso generico de organizar a matriz em linha
 	double temp;
@@ -74,14 +74,9 @@ vector<vector<double>> adquireImagem(string nomeDoArquivo, int numLinhas, int nu
 	}
 
 
-	vector<vector<double>> A;
-	int numLinA = numLinhas * numColunas;
-	A.resize(numLinA);
-	for (int i = 0; i < A.size(); i++) {
-		A[i].resize(numImagens);
-	}
 
-	// ler do texto
+	int numLinA = numLinhas * numColunas;
+	vector<vector<double>> A(numLinA, vector<double>(numImagens));
 	double temp;
 	for (int i = 0; i < numLinA; i++) {
 		for (int j = 0; j < numImagens && !(input.eof()); j++) {
@@ -114,39 +109,34 @@ vector<vector<double>> adquireImagem(string nomeDoArquivo, int numLinhas, int nu
 vector<vector<double>> aprendizagem(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinhas, int numColunas, int numImagens) {
 	vector<vector<double>> W;
 	fstream output(nomeDoArquivo, ios::out);
-
 	if (!output.is_open()) {
 		cout << endl << "Nao foi possivel abrir o arquivo" << endl;
 		return vector<vector<double>>();
 	}
 
-	
-
 	// obter W
-
 	W = NMF(A, p);
-	//W = A;
 
+	/*
 	// caso tenha que salvar W no formato original
-
-	 //int contador = 0;
-	//for (int z = 0; z < numImagens; z++) {
-	//	for (int i = 0; i < numLinhas; i++) {
-	//		for (int j = 0; j < numColunas; j++) {
-	//			output << W[contador][z] << " ";  // coloca os valores separador por espaco
-	//			contador++;
-	//		}
-	//		output << "\n"; // pula a linha
-	//	}
-	//	output << "\n";
-	//	contador = 0;
-	//}
+	int contador = 0;
+	for (int z = 0; z < numImagens; z++) {
+		for (int i = 0; i < numLinhas; i++) {
+			for (int j = 0; j < numColunas; j++) {
+				output << W[contador][z] << " ";  // coloca os valores separador por espaco
+				contador++;
+			}
+			output << "\n"; // pula a linha
+		}
+		output << "\n";
+		contador = 0;
+	} */
 
 	// salvando W no arquivo:
-
-	// analisar se vale a pena dividir por 255
-	for (int i = 0; i < W.size(); i++) {
-		for (int j = 0; j < W[0].size(); j++) {
+	int tamLinW = W.size();
+	int tamColW = W[0].size();
+	for (int i = 0; i < tamLinW; i++) {
+		for (int j = 0; j < tamColW; j++) {
 			output << W[i][j] << " ";
 		}
 		output << "\n";
@@ -160,39 +150,34 @@ vector<vector<double>> aprendizagem(string nomeDoArquivo, vector<vector<double>>
 void Aprende(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinhas, int numColunas, int numImagens) {
 	vector<vector<double>> W;
 	fstream output(nomeDoArquivo, ios::out);
-
 	if (!output.is_open()) {
 		cout << endl << "Nao foi possivel abrir o arquivo" << endl;
 		return;
 	}
 
-
-
 	// obter W
-
 	W = NMF(A, p);
-	//W = A;
 
+	/*
 	// caso tenha que salvar W no formato original
-
-	 //int contador = 0;
-	//for (int z = 0; z < numImagens; z++) {
-	//	for (int i = 0; i < numLinhas; i++) {
-	//		for (int j = 0; j < numColunas; j++) {
-	//			output << W[contador][z] << " ";  // coloca os valores separador por espaco
-	//			contador++;
-	//		}
-	//		output << "\n"; // pula a linha
-	//	}
-	//	output << "\n";
-	//	contador = 0;
-	//}
+	int contador = 0;
+	for (int z = 0; z < numImagens; z++) {
+		for (int i = 0; i < numLinhas; i++) {
+			for (int j = 0; j < numColunas; j++) {
+				output << W[contador][z] << " ";  // coloca os valores separador por espaco
+				contador++;
+			}
+			output << "\n"; // pula a linha
+		}
+		output << "\n";
+		contador = 0;
+	} */
 
 	// salvando W no arquivo:
-
-	// analisar se vale a pena dividir por 255
-	for (int i = 0; i < W.size(); i++) {
-		for (int j = 0; j < W[0].size(); j++) {
+	int tamLinW = W.size();
+	int tamColW = W[0].size();
+	for (int i = 0; i < tamLinW; i++) {
+		for (int j = 0; j < tamColW; j++) {
 			output << W[i][j] << " ";
 		}
 		output << "\n";
@@ -202,10 +187,10 @@ void Aprende(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinha
 }
 /*
 Apos a fase de treinamento com ndig treino deve-se usar o conjunto de testes para se aferir o porcentual de acerto dos classificadores.
-As imagens que serao usadas para os testes devem ser lidas do arquivo test images.txt e armazenadas em uma matriz A com 784 linhas e n test colunas, 
+As imagens que serao usadas para os testes devem ser lidas do arquivo test images.txt e armazenadas em uma matriz A com 784 linhas e n test colunas,
 sendo 10000 o numero de imagens neste arquivo, e portanto o maximo valor possıvel para o numero de imagens n test que se deseja testar.
 
-Para cada dıgito devemos resolver o sistema WdH = A, no sentido de m´ınimos quadrados, onde H e uma matriz p × n test 
+Para cada dıgito devemos resolver o sistema WdH = A, no sentido de m´ınimos quadrados, onde H e uma matriz p × n test
 (atraves do metodo de fatoracao QR da matriz Wd correspondente - veja a secao sobre sistemas simultaneos).
 
 Calculamos entao, para cada coluna cj de A−WdH sua norma euclidiana (||cj || = SQRT(Soma de 1 a 784 de c(i,j)^2)
@@ -224,57 +209,33 @@ para cada uma das n test imagens teste.
 */
 
 // funcao para realizar os testes e verificar a taxa de acertos
-void acerto(string arquivoD0, string arquivoD1, string arquivoD2, string arquivoD3, string arquivoD4,
-	string arquivoD5, string arquivoD6, string arquivoD7, string arquivoD8, string arquivoD9,
-	string arquivoTestes, int p, int numLinhas, int numColunas, int n_teste) {
+// 
+void classificaDigito(string arquivoDigito, vector<vector<double>> A, vector<double>& erro, vector<double>& indice,int digito, 
+	int p, int numLinhas, int numColunas, int n_teste) {
 
 	if (n_teste > 10000) {
 		cout << endl << "Numero de teste invalido" << endl;
 		return;
 	}
 
-	// adquire a matriz com os valores a serem classificados
-	vector<vector<double>> A; // declaracao e alocacao da matriz A
 	int numLinA = numColunas * numLinhas;
-	A.resize(numLinA);
-	for (int i = 0; i < numLinA; i++)
-		A[i].resize(n_teste);
-
-	fstream inputA(arquivoTestes, ios::in); // Abertura do arquivo
-	if (!inputA.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D0" << endl;
-		return;
-	}
-
-	double temp;
-	for (int i = 0; i < A.size(); i++) { // Atribuicao da matriz A
-		for (int j = 0; j < A[0].size() && !(inputA.eof()); j++) {
-			inputA >> temp;
-			A[i][j] = temp / 255;
-		}
-		inputA.ignore(99999999, '\n');
-	}
-
-	inputA.close();
-	vector<vector<double>> salvaA;
+	
+	vector<vector<double>> salvaA; // matriz para deixar sempre salvo os valores a serem testados
 	salvaA = A;
 
-	vector<vector<double>> W; // declaracao da matriz onde serao armazenados os dados aprendidos
-	W.resize(numLinA);
-	for (int i = 0; i < numLinA; i++)
-		W[i].resize(p);
+	vector<vector<double>> W(numLinA, vector<double>(p)); // matriz com os valores já treinados
 	vector<vector<double>> H;
-	vector<vector<double>> erro(n_teste, vector<double>(2, 0));
+	
 
 	// resolvendo o sistema para o digito 0
-	fstream input0(arquivoD0, ios::in);
+	fstream input0(arquivoDigito, ios::in);
 	if (!input0.is_open()) {
-		cout << endl << "Nao foi possivel abrir o arquivo do D0" << endl;
+		cout << endl << "Nao foi possivel abrir o arquivo: "<< arquivoDigito << endl;
 		return;
 	}
-	
-	for (int i = 0; i < W.size(); i++) { // Atribuicao da matriz W
-		for (int j = 0; j < W[0].size() && !(input0.eof()); j++) {
+
+	for (int i = 0; i < numLinA; i++) { // Atribuicao da matriz W
+		for (int j = 0; j < p && !(input0.eof()); j++) {
 			input0 >> W[i][j];
 		}
 		input0.ignore(99999999, '\n');
@@ -288,21 +249,263 @@ void acerto(string arquivoD0, string arquivoD1, string arquivoD2, string arquivo
 
 	vector<vector<double>> produto;
 	produto = MMultiplication(W, H); // produto de W e H
-	
-	vector<vector<double>> subtracao(produto.size(), vector<double>(produto[0].size()));
-	 
-	for (int j = 0; j < produto[0].size(); j++) {
-		double soma = 0;
-		double s = 0;// norma da linha
-		for (int i = 0; i < produto.size(); i++) {
-			subtracao[i][j] = A[i][j] - produto[i][j];
-			soma += subtracao[i][j] * subtracao[i][j];
+	int tamColProd = produto[0].size();
+	int tamLinProd = produto.size();
+
+	double provisorio; // para salvar A - WH
+
+	// calculo do erro
+	double soma;
+	double erro_atual;
+	for (int j = 0; j < tamColProd; j++) {
+		soma = 0;
+		for (int i = 0; i < tamLinProd; i++) {
+			provisorio = A[i][j] - produto[i][j];
+			soma += provisorio * provisorio; // calcula o quadrado de cada elemento da coluna e soma todos eles
 		}
-		s = sqrt(soma);
-		// como se trata do primeiro caso, vai ser o erro inicial
-		erro[0][j] = s;
-		// nao preciso atribuir o erro[1][j] = 0 pois ja foi feito na declaracao
+		erro_atual = sqrt(soma); // raiz do somatorio, esse e o erro
+		if (digito != 0) { // atualiza o erro para os digitos subsequentes
+			if (erro_atual > erro[j]) {
+				erro[j] = erro_atual;
+				indice[j] = digito;
+
+			}
+
+		}
+		else { // erro inicial corresponde ao erro do digito 0
+			erro[j] = erro_atual;
+			indice[j] = 0;
+		}
+	}
+}
+
+// Mesma funcao que a anterior, mas quando ja sei o W do digito, para nao ter que abrir o arquivo e ler
+
+void classificaDigito(vector<vector<double>> Wdigito, vector<vector<double>> A, vector<double>& erro, vector<double>& indice, int digito,
+	int p, int numLinhas, int numColunas, int n_teste) {
+	if (n_teste > 10000) {
+		cout << endl << "Numero de teste invalido" << endl;
+		return;
 	}
 
+	int numLinA = numColunas * numLinhas;
 
+	vector<vector<double>> salvaA; // matriz para deixar sempre salvo os valores a serem testados
+	salvaA = A;
+	vector<vector<double>> H;
+
+
+	H = solucaoSimultaneos(Wdigito, A); // solucao do sistema
+
+	A = salvaA;
+
+	vector<vector<double>> produto;
+	produto = MMultiplication(Wdigito, H); // produto de W e H
+	int tamColProd = produto[0].size();
+	int tamLinProd = produto.size();
+
+	double provisorio; // para salvar A - WH
+	int contagem = 0;
+	// calculo do erro
+	double soma;
+	double erro_atual;
+	for (int j = 0; j < tamColProd; j++) {
+		soma = 0;
+		for (int i = 0; i < tamLinProd; i++) {
+			provisorio = A[i][j] - produto[i][j];
+			soma += provisorio * provisorio; // calcula o quadrado de cada elemento da coluna e soma todos eles
+		}
+		erro_atual = sqrt(soma); // raiz do somatorio, esse e o erro
+		if (digito != 0) { // atualiza o erro para os digitos subsequentes
+			if (erro_atual > erro[j]) {
+				erro[j] = erro_atual;
+				indice[j] = digito;
+			}
+
+		}
+		else { // erro inicial corresponde ao erro do digito 0
+			erro[j] = erro_atual;
+			indice[j] = 0;
+		}
+	}
+}
+
+/*
+	Essa funcao ira calcula a taxa de acerto total e a taxa de acerto por digito
+*/
+
+double taxaDeAcerto(string arquivoIndices, vector<double> indice, int n_teste,
+	double& acerto0, double& acerto1, double& acerto2, double& acerto3, double& acerto4, double& acerto5, 
+	double& acerto6, double& acerto7, double& acerto8, double& acerto9) {
+	// pegando os dados do gabarito
+	fstream input(arquivoIndices, ios::in);
+	if (!input.is_open()) {
+		cout << endl << "Nao foi possivel abrir o arquivo: " << arquivoIndices << endl;
+		return 0;
+	}
+	vector<double> gabarito(n_teste);
+	for (int i = 0; i < n_teste && !(input.eof()); i++) { // Pegando os dados do gabarito
+		input >> gabarito[i];		
+	}
+
+	input.close();
+	
+	
+	double acertos = 0;
+	acerto0 = 0;
+	acerto1 = 0;
+	acerto2 = 0;
+	acerto3 = 0;
+	acerto4 = 0;
+	acerto5 = 0;
+	acerto6 = 0;
+	acerto7 = 0;
+	acerto8 = 0;
+	acerto9 = 0;
+
+	double quantidade0 = 0;
+	double quantidade1 = 0;
+	double quantidade2 = 0;
+	double quantidade3 = 0;
+	double quantidade4 = 0;
+	double quantidade5 = 0;
+	double quantidade6 = 0;
+	double quantidade7 = 0;
+	double quantidade8 = 0;
+	double quantidade9 = 0;
+
+	for (int i = 0; i < n_teste; i++) {
+		// verificar o numero total de cada digito no arquivo
+		// utilizando uma busca binaria por ser mais rapida
+		if (gabarito[i] < 4.5) { // pode ser 0,1,2,3,4
+
+			if (gabarito[i] < 2.5) { // pode ser 0,1,2
+
+				if (gabarito[i] < 1.5) { // pode ser 0,1
+
+					if (gabarito[i] == 0) { // apenas 0
+						quantidade0++;
+					}
+					else { // apenas 1
+						quantidade1++;
+					}
+				}
+				else { // apenas 2
+					quantidade2++;
+				}
+			}
+			else { // pode ser 3,4
+				if (gabarito[i] == 3) { // apenas 3
+					quantidade3++;
+				}
+				else { // apenas 4
+					quantidade4++;
+				}
+
+			}
+
+		}
+		else { // pode ser 5,6,7,8,9
+
+			if (gabarito[i] < 7.5) { // pode ser 5,6,7
+
+				if (gabarito[i] < 6.5) { // pode ser 5 ou 6
+
+					if (gabarito[i] == 5) { // apenas 5
+						quantidade5++;
+					}
+					else { // apenas 6
+						quantidade6++;
+					}
+				}
+				else { // apenas 7
+					quantidade7++;
+				}
+			}
+			else { // pode ser 8 ou 9
+
+				if (indice[i] == 8) { // apenas 8
+					quantidade8++;
+				}
+				else { // apenas 9
+					quantidade9++;
+				}
+			}
+		}
+
+		if (gabarito[i] == indice[i]) {
+			acertos++;
+			// vamos categorizar utilizando uma arvore de busca, de modo a reduzir o tempo medio de execucao
+			if (indice[i] < 4.5) { // pode ser 0,1,2,3,4
+
+				if (indice[i] < 2.5) { // pode ser 0,1,2
+
+					if (indice[i] < 1.5) { // pode ser 0,1
+
+						if (indice[i] == 0) { // apenas 0
+							acerto0++;
+						}
+						else { // apenas 1
+							acerto1++;
+						}
+					}
+					else { // apenas 2
+						acerto2++;
+					}
+				}
+				else { // pode ser 3,4
+					if (indice[i] == 3) { // apenas 3
+						acerto3++;
+					}
+					else { // apenas 4
+						acerto4++;
+					}
+
+				}
+
+			}
+			else { // pode ser 5,6,7,8,9
+
+				if (indice[i] < 7.5) { // pode ser 5,6,7
+
+					if (indice[i] < 6.5){ // pode ser 5 ou 6
+						
+						if (indice[i] == 5) { // apenas 5
+							acerto5++;
+						}
+						else { // apenas 6
+							acerto6++;
+						}
+					}
+					else { // apenas 7
+						acerto7++;
+					}
+				}
+				else { // pode ser 8 ou 9
+
+					if (indice[i] == 8) { // apenas 8
+						acerto8++;
+					}
+					else { // apenas 9
+						acerto9++;
+					}
+				}
+			}
+
+		}
+	}
+
+	acertos = acertos / n_teste;
+	acerto0 = acerto0 / quantidade0;
+	acerto1 = acerto1 / quantidade1;
+	acerto2 = acerto2 / quantidade2;
+	acerto3 = acerto3 / quantidade3;
+	acerto4 = acerto4 / quantidade4;
+	acerto5 = acerto5 / quantidade5;
+	acerto6 = acerto6 / quantidade6;
+	acerto7 = acerto7 / quantidade7;
+	acerto8 = acerto8 / quantidade8;
+	acerto9 = acerto9 / quantidade9;
+
+	return acertos;
 }

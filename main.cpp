@@ -10,13 +10,12 @@
 #include "rotGivens.h"
 #include "fatoracaoNaoNeg.h"
 #include "preProcessamento.h"
-#include <thread> // biblioteca para trabalhar em paralelo
-//#include <amp.h> // biblioteca para trabalhar em paralelo
+
 
 #define numeroLinhas 28
 #define numeroColunas 28
 #define tamanhoP 5
-#define numeroImagens 100
+#define numeroImagens 4000
 #define numeroTestes 10000
 
 using namespace std;
@@ -28,158 +27,110 @@ int main() {
 	// unsync the I/O of C and C++. 
 	ios_base::sync_with_stdio(false);
 
-	vector<vector<double> > a;
+	vector<vector<double>> b, W0, W1, W2, W3, W4, W5, W6, W7, W8, W9;
 
-	//m * n is the size of the matrix
+	cout << "Parametros utilizados: " << endl;
+	cout << "p = " << tamanhoP << endl;
+	cout << "ndig_treino = " << numeroImagens << endl;
+	cout << "n_test = " << numeroTestes << endl;
 
-	//int m = 3, n = 3;
-	////Grow rows by m
-	//a.resize(m);
-	//for (int i = 0; i < m; i++)
-	//{
-	//	//Grow Columns by n
-	//	a[i].resize(n);
-	//}
-	//Now you have matrix m*n with default values
-
-	//a[0] = { 0.3, 0.6, 0 };
-	//a[1] = { 0.5, 0, 1 };
-	//a[2] = { 0.4, 0.8, 0 };
-
-
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		if (abs(i - j) < 5) {
-	//			double soma = i + j + 1;
-	//			a[i][j] = 1 / soma;
-	//		}
-	//		else if (abs(i - j) > 4)
-	//			a[i][j] = 0;
-	//		else
-	//			a[i][j] = 0;
-	//	}
-	//}
-
-	// b é m * p
-	vector<vector<double>> b;
-	/*int p = 2;
-	b.resize(m);
-	for (int i = 0; i < m; i++)
-		b[i].resize(p);*/
-	//b = { 1, 2, 4, 8 };
-	//b = { 1,2 };
-	/*for (int i = 0; i < m; i++) {
-		for (int j = 0; j < p; j++) {
-			if (j == 0)
-				b[i][j] = 1;
-			else if (j == 1) 
-				b[i][j] = (i + 1);
-			else if (j == 2)
-				b[i][j] = 2 * (i + 1) - 1;
-		}
-	}*/
-
-	//cout << "Matriz inicial: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		cout << a[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-
-	
-	//cout << "B inicial: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < p; j++) {
-	//		cout << b[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-	
-	vector<vector<double>> x;
-
-	// IMPORTANTE LEMBRAR DISSO
-	//cout << endl << "Numero de colunas: " << a[0].size() << endl;
-	//cout << "Numero de linhas: " << a.size() << endl;
-
-	
-	// treinamento
 	b = adquireImagem("train_dig0.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig0 \n");
-	Aprende("treino_d0_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W0 = aprendizagem("treino_d0_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 0 feito \n");
 
 	b = adquireImagem("train_dig1.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig1 \n");
-	Aprende("treino_d1_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W1 = aprendizagem("treino_d1_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 1 feito \n");
 
 	b = adquireImagem("train_dig2.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig2 \n");
-	Aprende("treino_d2_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W2 = aprendizagem("treino_d2_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 2 feito \n");
 
 	b = adquireImagem("train_dig3.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig3 \n");
-	Aprende("treino_d3_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W3 = aprendizagem("treino_d3_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 3 feito \n");
 
 	b = adquireImagem("train_dig4.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig4 \n");
-	Aprende("treino_d4_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W4 = aprendizagem("treino_d4_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 4 feito \n");
 
 	b = adquireImagem("train_dig5.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig5 \n");
-	Aprende("treino_d5_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W5 = aprendizagem("treino_d5_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 5 feito \n");
 
 	b = adquireImagem("train_dig6.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig6 \n");
-	Aprende("treino_d6_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W6 = aprendizagem("treino_d6_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 6 feito \n");
 
 	b = adquireImagem("train_dig7.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig7 \n");
-	Aprende("treino_d7_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W7 = aprendizagem("treino_d7_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 7 feito \n");
 
 	b = adquireImagem("train_dig8.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig8 \n");
-	Aprende("treino_d8_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W8 = aprendizagem("treino_d8_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 8 feito \n");
 
 	b = adquireImagem("train_dig9.txt", numeroLinhas, numeroColunas, numeroImagens);
 	printf("Realizando dig9 \n");
-	Aprende("treino_d9_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W9 = aprendizagem("treino_d9_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	printf("Digito 9 feito \n");
+
+
+	vector<double> erro(numeroTestes);
+	vector<double> indice(numeroTestes, 0);
+
+	// arquivo com as imagens para testar se acertou a classificacao
+	fstream input("test_images.txt", ios::in);
+	if (!input.is_open()) {
+		cout << endl << "Nao foi possivel abrir o arquivo de teste de imagens" << endl;
+		return 0;
+	}
+	int numLinA = numeroLinhas * numeroColunas;
+	vector<vector<double>> A(numLinA, vector<double>(numeroTestes));
+	for (int i = 0; i < numLinA; i++) {
+		for (int j = 0; j < numeroTestes && !(input.eof()); j++) {
+			input >> A[i][j];
+		}
+		input.ignore(99999999, '\n');
+	}
+	input.close();
+	
+	printf("Realizando classificacao: \n");
+	classificaDigito(W0, A, erro, indice, 0, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W1, A, erro, indice, 1, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W2, A, erro, indice, 2, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W3, A, erro, indice, 3, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W4, A, erro, indice, 4, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W5, A, erro, indice, 5, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W6, A, erro, indice, 6, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W7, A, erro, indice, 7, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W8, A, erro, indice, 8, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
+	classificaDigito(W9, A, erro, indice, 9, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
 	
 
-	//cout << endl << "Matriz final: " << endl;
-	//for (int i = 0; i < m; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		cout << a[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-	//cout << endl;
-
-	/*cout << "B final: " << endl;*/
-	//for (int i = 0; i < b.size(); i++) {
-	//	for (int j = 0; j < b[0].size(); j++) {
-	//		cout << b[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-
-	/*cout << "Solucao: " << endl;*/
-	//for (int i = 0; i < x.size(); i++) {
-	//	for (int j = 0; j < x[0].size(); j++) {
-	//		cout << x[i][j] << " ";
-	//	}
-	//	cout << endl;
-	//}
-
+	double acertos;
+	double acerto0, acerto1, acerto2, acerto3, acerto4, acerto5, acerto6, acerto7, acerto8, acerto9;
+	acertos = taxaDeAcerto("test_index.txt", indice, numeroImagens, acerto0, acerto1, acerto2, acerto3, acerto4, acerto5, acerto6, acerto7, acerto8, acerto9);
+	cout <<"Taxa de acerto total: " << acertos*100 <<"%" << endl;
+	cout << "Acertos do digito 0: " << acerto0 * 100 << "%" << endl;
+	cout << "Acertos do digito 1: " << acerto1 * 100 << "%" << endl;
+	cout << "Acertos do digito 2: " << acerto2 * 100 << "%" << endl;
+	cout << "Acertos do digito 3: " << acerto3 * 100 << "%" << endl;
+	cout << "Acertos do digito 4: " << acerto4 * 100 << "%" << endl;
+	cout << "Acertos do digito 5: " << acerto5 * 100 << "%" << endl;
+	cout << "Acertos do digito 6: " << acerto6 * 100 << "%" << endl;
+	cout << "Acertos do digito 7: " << acerto7 * 100 << "%" << endl;
+	cout << "Acertos do digito 8: " << acerto8 * 100 << "%" << endl;
+	cout << "Acertos do digito 9: " << acerto9 * 100 << "%" << endl;
 
 	auto end = chrono::high_resolution_clock::now();
 

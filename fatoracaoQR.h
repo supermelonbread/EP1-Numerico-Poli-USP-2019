@@ -1,4 +1,4 @@
-// /*
+
 #include <vector>
 
 using namespace std;
@@ -11,4 +11,4 @@ vector<double> solucaoSistemas(vector<vector<double> >& matriz, vector<double>& 
 vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vector<double>>& A);
 
 #endif 
-// */#pragma once
+
