@@ -15,7 +15,7 @@
 #define numeroLinhas 28
 #define numeroColunas 28
 #define tamanhoP 5
-#define numeroImagens 4000
+#define numeroImagens 100
 #define numeroTestes 10000
 
 using namespace std;
@@ -29,60 +29,63 @@ int main() {
 
 	vector<vector<double>> b, W0, W1, W2, W3, W4, W5, W6, W7, W8, W9;
 
+	cout << "EP1 Calculo Numerico" << endl;
+	cout << "Alunos: Lucas Werner e Pedro Rabelo" << endl;
+	cout << endl;
 	cout << "Parametros utilizados: " << endl;
 	cout << "p = " << tamanhoP << endl;
 	cout << "ndig_treino = " << numeroImagens << endl;
 	cout << "n_test = " << numeroTestes << endl;
 
 	b = adquireImagem("train_dig0.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig0 \n");
+	//printf("Realizando dig0 \n");
 	W0 = aprendizagem("treino_d0_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 0 feito \n");
+	//printf("Digito 0 feito \n");
 
 	b = adquireImagem("train_dig1.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig1 \n");
+	//printf("Realizando dig1 \n");
 	W1 = aprendizagem("treino_d1_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 1 feito \n");
+	//printf("Digito 1 feito \n");
 
 	b = adquireImagem("train_dig2.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig2 \n");
+	//printf("Realizando dig2 \n");
 	W2 = aprendizagem("treino_d2_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 2 feito \n");
+	//printf("Digito 2 feito \n");
 
 	b = adquireImagem("train_dig3.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig3 \n");
+	//printf("Realizando dig3 \n");
 	W3 = aprendizagem("treino_d3_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 3 feito \n");
+	//printf("Digito 3 feito \n");
 
 	b = adquireImagem("train_dig4.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig4 \n");
+	//printf("Realizando dig4 \n");
 	W4 = aprendizagem("treino_d4_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 4 feito \n");
+	//printf("Digito 4 feito \n");
 
 	b = adquireImagem("train_dig5.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig5 \n");
+	//printf("Realizando dig5 \n");
 	W5 = aprendizagem("treino_d5_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 5 feito \n");
+	//printf("Digito 5 feito \n");
 
 	b = adquireImagem("train_dig6.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig6 \n");
+	//printf("Realizando dig6 \n");
 	W6 = aprendizagem("treino_d6_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 6 feito \n");
+	//printf("Digito 6 feito \n");
 
 	b = adquireImagem("train_dig7.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig7 \n");
+	//printf("Realizando dig7 \n");
 	W7 = aprendizagem("treino_d7_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 7 feito \n");
+	//printf("Digito 7 feito \n");
 
 	b = adquireImagem("train_dig8.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig8 \n");
+	//printf("Realizando dig8 \n");
 	W8 = aprendizagem("treino_d8_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 8 feito \n");
+	//printf("Digito 8 feito \n");
 
 	b = adquireImagem("train_dig9.txt", numeroLinhas, numeroColunas, numeroImagens);
-	printf("Realizando dig9 \n");
+	//printf("Realizando dig9 \n");
 	W9 = aprendizagem("treino_d9_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
-	printf("Digito 9 feito \n");
+	//printf("Digito 9 feito \n");
 
 
 	vector<double> erro(numeroTestes);
@@ -104,7 +107,7 @@ int main() {
 	}
 	input.close();
 	
-	printf("Realizando classificacao: \n");
+	//printf("Realizando classificacao: \n");
 	classificaDigito(W0, A, erro, indice, 0, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
 	classificaDigito(W1, A, erro, indice, 1, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
 	classificaDigito(W2, A, erro, indice, 2, tamanhoP, numeroLinhas, numeroColunas, numeroTestes);
