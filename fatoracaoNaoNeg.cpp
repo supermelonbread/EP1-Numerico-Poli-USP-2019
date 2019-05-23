@@ -56,18 +56,13 @@ vector<vector<double>> NMF(vector<vector<double> >& matriz,  int p, vector<vecto
 	vector<vector<double>> Ht; // transposta de H
     vector<vector<double>> Wt;
 
-	//W.resize(A.size());
-	//for (int i = 0; i < A.size(); i++) {
-	//	W[i].resize(p);
-	//}
-
-	//srand(time(NULL));
+	//srand(time(NULL)); // caso queira utilizar uma seed aleatoria
 	int tamLinW = W.size();
 	int tamColW = W[0].size();
 	// inicializacao de W
 	for (int i = 0; i < tamLinW; i++) {
 		for (int j = 0; j < tamColW; j++) {
-			W[i][j] = rand(); // Inicializa W com um inteiro aleatorio
+			W[i][j] = rand()%100; // Inicializa W com um inteiro aleatorio
 			W[i][j]++; // para impedir valores nulos
 		}
 	}
@@ -104,7 +99,7 @@ vector<vector<double>> NMF(vector<vector<double> >& matriz,  int p, vector<vecto
 			}
 		}
 
-		// parte das transpostas
+		// calcula as transpostas
 		At = MTranspose(matriz);
 		Ht = MTranspose(H);
 
@@ -145,6 +140,7 @@ vector<vector<double>> NMF(vector<vector<double> >& matriz,  int p, vector<vecto
 
 // Caso nao precise do H
 // O codigo e basicamente o mesmo
+// A unica diferenca e que nao retorna uma matriz H por referencia
 vector<vector<double>> NMF(vector<vector<double> >& matriz, int p) {
 	vector<vector<double>> A;
 	vector<vector<double>> W(matriz.size(), vector<double>(p));
@@ -153,18 +149,13 @@ vector<vector<double>> NMF(vector<vector<double> >& matriz, int p) {
 	vector<vector<double>> Ht; // transposta de H
     vector<vector<double>> Wt;
 
-	//W.resize(A.size());
-	//for (int i = 0; i < A.size(); i++) {
-	//	W[i].resize(p);
-	//}
-
 	//srand(time(NULL));
 	int tamLinW = W.size();
 	int tamColW = W[0].size();
 	// inicializacao de W
 	for (int i = 0; i < tamLinW; i++) {
 		for (int j = 0; j < tamColW; j++) {
-			W[i][j] = rand(); // Inicializa W com um inteiro aleatorio
+			W[i][j] = rand()%100; // Inicializa W com um inteiro aleatorio
 			W[i][j]++; // para impedir valores nulos
 		}
 	}

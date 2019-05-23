@@ -8,14 +8,6 @@
 using namespace std;
 
 vector<vector<double> > MMultiplication(vector<vector<double> > a, vector<vector<double> > b) {
-
-	/*
-	a_columns = a[0].size();
-	a_rows = a.size();
-	b_columns = b[0].size();
-	b_rows = b.size();
-	*/
-
 	vector<vector<double>> result(a.size(), vector<double>(b[0].size()));
 
 	if (a[0].size() != b.size()) {

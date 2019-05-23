@@ -3,8 +3,8 @@
 #include <fstream>
 #include <string>
 #include <math.h>
-#include <chrono> // verificar quanto tempo leva para rodar
-#include <iomanip>// tirar essa biblioteca depois
+//#include <chrono> // biblioteca para ver quanto tempo leva para rodar
+//#include <iomanip>// biblioteca para ver quanto tempo leva para rodar
 #include "fatoracaoQR.h"
 #include "MatrixOperations.h"
 #include "rotGivens.h"
@@ -14,18 +14,18 @@
 
 #define numeroLinhas 28
 #define numeroColunas 28
-#define tamanhoP 5
-#define numeroImagens 100
+#define tamanhoP 15
+#define numeroImagens 4000
 #define numeroTestes 10000
 
 using namespace std;
-using namespace std::chrono;
+//using namespace std::chrono;
 
 int main() {
-
-	auto start = chrono::high_resolution_clock::now();
-	// unsync the I/O of C and C++. 
-	ios_base::sync_with_stdio(false);
+	// Parte para calcular o tempo de execucao
+	//auto start = chrono::high_resolution_clock::now();
+	//// unsync the I/O of C and C++. 
+	//ios_base::sync_with_stdio(false);
 
 	vector<vector<double>> b, W0, W1, W2, W3, W4, W5, W6, W7, W8, W9;
 
@@ -39,52 +39,52 @@ int main() {
 
 	b = adquireImagem("train_dig0.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig0 \n");
-	W0 = aprendizagem("treino_d0_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W0 = aprendizagem("treino_d0_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 0 feito \n");
 
 	b = adquireImagem("train_dig1.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig1 \n");
-	W1 = aprendizagem("treino_d1_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W1 = aprendizagem("treino_d1_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 1 feito \n");
 
 	b = adquireImagem("train_dig2.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig2 \n");
-	W2 = aprendizagem("treino_d2_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W2 = aprendizagem("treino_d2_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 2 feito \n");
 
 	b = adquireImagem("train_dig3.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig3 \n");
-	W3 = aprendizagem("treino_d3_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W3 = aprendizagem("treino_d3_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 3 feito \n");
 
 	b = adquireImagem("train_dig4.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig4 \n");
-	W4 = aprendizagem("treino_d4_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W4 = aprendizagem("treino_d4_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 4 feito \n");
 
 	b = adquireImagem("train_dig5.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig5 \n");
-	W5 = aprendizagem("treino_d5_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W5 = aprendizagem("treino_d5_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 5 feito \n");
 
 	b = adquireImagem("train_dig6.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig6 \n");
-	W6 = aprendizagem("treino_d6_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W6 = aprendizagem("treino_d6_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 6 feito \n");
 
 	b = adquireImagem("train_dig7.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig7 \n");
-	W7 = aprendizagem("treino_d7_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W7 = aprendizagem("treino_d7_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 7 feito \n");
 
 	b = adquireImagem("train_dig8.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig8 \n");
-	W8 = aprendizagem("treino_d8_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W8 = aprendizagem("treino_d8_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 8 feito \n");
 
 	b = adquireImagem("train_dig9.txt", numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Realizando dig9 \n");
-	W9 = aprendizagem("treino_d9_p5_treino100.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
+	W9 = aprendizagem("treino_d9_p15_treino4000.txt", b, tamanhoP, numeroLinhas, numeroColunas, numeroImagens);
 	//printf("Digito 9 feito \n");
 
 
@@ -135,16 +135,15 @@ int main() {
 	cout << "Acertos do digito 8: " << acerto8 * 100 << "%" << endl;
 	cout << "Acertos do digito 9: " << acerto9 * 100 << "%" << endl;
 
-	auto end = chrono::high_resolution_clock::now();
-
-	// Calculating total time taken by the program. 
-	double time_taken =
-		chrono::duration_cast<chrono::nanoseconds>(end - start).count();
-	time_taken *= 1e-9;
-
-	cout << "Time taken by program is : " << fixed
-		<< time_taken << setprecision(9);
-	cout << " sec" << endl;
+	// Parte para calcular o tempo de execucao
+	//auto end = chrono::high_resolution_clock::now();
+	//// Calculating total time taken by the program. 
+	//double time_taken =
+	//	chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+	//time_taken *= 1e-9;
+	//cout << "Time taken by program is : " << fixed
+	//	<< time_taken << setprecision(9);
+	//cout << " sec" << endl;
 
 	return 0;
 }

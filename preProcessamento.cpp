@@ -31,7 +31,8 @@ using namespace std;
 			RGB.
 */
 
-// IMPORTANTE VERIFICAR SE ESTA DIVIDINDO POR 255
+// utilizar apenas quando a imagem esta salva na forma original
+// isto e, quando nao esta organizada como uma coluna so
 vector<vector<double>> preProcessaImagem(string nomeDoArquivo, int numLinhas, int numColunas, int numImagens) {
 
 	// abre o arquivo para leitura
@@ -44,13 +45,9 @@ vector<vector<double>> preProcessaImagem(string nomeDoArquivo, int numLinhas, in
 	// declaracao da matriz A
 	int numLinA = numLinhas * numColunas;
 	vector<vector<double>> A (numLinA, vector<double>(numImagens));
-	//A.resize(numLinA);
-	/*for (int i = 0; i < A.size(); i++){
-		A[i].resize(numImagens);
-	}
-*/
+
 	// ler do arquivo e armazenar na matriz A diretamente do arquivo e divide o valor por 255
-	// repare que essa funcao serve para o caso generico de organizar a matriz em linha
+	// repare que essa funcao serve para o caso generico de organizar a matriz em uma unica coluna
 	double temp;
 	for (int j = 0; j < numImagens ; j++){
 		for (int i = 0; i < numLinA && !(input.eof()); i++) {
@@ -65,16 +62,15 @@ vector<vector<double>> preProcessaImagem(string nomeDoArquivo, int numLinhas, in
 
 // funcao a ser utilizada pois parte do pre processamento ja foi feito
 // adquire a imagem da forma que esta, arrumando apenas o modulo
-
 vector<vector<double>> adquireImagem(string nomeDoArquivo, int numLinhas, int numColunas, int numImagens) {
+	// abre o arquivo
 	fstream input(nomeDoArquivo, ios::in);
 	if (!input.is_open()) {
 		cout << endl << "Nao foi possivel abrir o arquivo" << endl;
 		return vector<vector<double>>();
 	}
 
-
-
+	// salva na matriz e divide por 255
 	int numLinA = numLinhas * numColunas;
 	vector<vector<double>> A(numLinA, vector<double>(numImagens));
 	double temp;
@@ -106,33 +102,21 @@ vector<vector<double>> adquireImagem(string nomeDoArquivo, int numLinhas, int nu
 	a partir dos dados disponıveis de aprendizagem e sera usada na classificacao de dıgitos.
 */
 
+// obtem o Wdigito e o retorna como resultado da funcao
 vector<vector<double>> aprendizagem(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinhas, int numColunas, int numImagens) {
 	vector<vector<double>> W;
+
+	// cria um arquivo txt para salvar o Wdigito
 	fstream output(nomeDoArquivo, ios::out);
 	if (!output.is_open()) {
 		cout << endl << "Nao foi possivel abrir o arquivo" << endl;
 		return vector<vector<double>>();
 	}
 
-	// obter W
+	// obter Wdigito
 	W = NMF(A, p);
 
-	/*
-	// caso tenha que salvar W no formato original
-	int contador = 0;
-	for (int z = 0; z < numImagens; z++) {
-		for (int i = 0; i < numLinhas; i++) {
-			for (int j = 0; j < numColunas; j++) {
-				output << W[contador][z] << " ";  // coloca os valores separador por espaco
-				contador++;
-			}
-			output << "\n"; // pula a linha
-		}
-		output << "\n";
-		contador = 0;
-	} */
-
-	// salvando W no arquivo:
+	// salvando Wdigito no arquivo:
 	int tamLinW = W.size();
 	int tamColW = W[0].size();
 	for (int i = 0; i < tamLinW; i++) {
@@ -147,6 +131,7 @@ vector<vector<double>> aprendizagem(string nomeDoArquivo, vector<vector<double>>
 	return W;
 }
 
+// similar a funcao anterior, no entando nao retorna Wdigito como resultado da funcao
 void Aprende(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinhas, int numColunas, int numImagens) {
 	vector<vector<double>> W;
 	fstream output(nomeDoArquivo, ios::out);
@@ -157,21 +142,6 @@ void Aprende(string nomeDoArquivo, vector<vector<double>> A, int p, int numLinha
 
 	// obter W
 	W = NMF(A, p);
-
-	/*
-	// caso tenha que salvar W no formato original
-	int contador = 0;
-	for (int z = 0; z < numImagens; z++) {
-		for (int i = 0; i < numLinhas; i++) {
-			for (int j = 0; j < numColunas; j++) {
-				output << W[contador][z] << " ";  // coloca os valores separador por espaco
-				contador++;
-			}
-			output << "\n"; // pula a linha
-		}
-		output << "\n";
-		contador = 0;
-	} */
 
 	// salvando W no arquivo:
 	int tamLinW = W.size();
@@ -209,7 +179,7 @@ para cada uma das n test imagens teste.
 */
 
 // funcao para realizar os testes e verificar a taxa de acertos
-// 
+// caso Wdigito esteja salvo em um arquivo
 void classificaDigito(string arquivoDigito, vector<vector<double>> A, vector<double>& erro, vector<double>& indice,int digito, 
 	int p, int numLinhas, int numColunas, int n_teste) {
 
@@ -227,7 +197,7 @@ void classificaDigito(string arquivoDigito, vector<vector<double>> A, vector<dou
 	vector<vector<double>> H;
 	
 
-	// resolvendo o sistema para o digito 0
+	// abre o arquivo onde Wdigito esta salvo
 	fstream input0(arquivoDigito, ios::in);
 	if (!input0.is_open()) {
 		cout << endl << "Nao foi possivel abrir o arquivo: "<< arquivoDigito << endl;
@@ -280,7 +250,6 @@ void classificaDigito(string arquivoDigito, vector<vector<double>> A, vector<dou
 }
 
 // Mesma funcao que a anterior, mas quando ja sei o W do digito, para nao ter que abrir o arquivo e ler
-
 void classificaDigito(vector<vector<double>> Wdigito, vector<vector<double>> A, vector<double>& erro, vector<double>& indice, int digito,
 	int p, int numLinhas, int numColunas, int n_teste) {
 	if (n_teste > 10000) {
@@ -305,7 +274,6 @@ void classificaDigito(vector<vector<double>> Wdigito, vector<vector<double>> A, 
 	int tamLinProd = produto.size();
 
 	double provisorio; // para salvar A - WH
-	int contagem = 0;
 	// calculo do erro
 	double soma;
 	double erro_atual;

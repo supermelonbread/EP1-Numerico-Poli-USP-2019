@@ -77,14 +77,6 @@ void QR(vector<vector<double> >& matriz) {
 			}
 		}
 	}
-	// Zera os valores praticamente nulos
-	/*for (int i = 0; i < matriz[0].size(); i++) {
-		for (int j = 0; j < matriz.size(); j++) {
-			if (abs(matriz[j][i]) < ZERO) {
-				matriz[j][i] = 0;
-			}
-		}
-	}*/
 }
 
 /*	Fatoração QR:
@@ -189,24 +181,6 @@ vector<double> solucaoSistemas(vector<vector<double> >& matriz, vector<double>& 
 			x[k] = vetor[k] / matriz[k][k] - soma;
 		}
 	}
-
-	/*int k = tamColMatriz - 1;
-	x[k] = vetor[k] / matriz[k][k];
-	for (int k = tamColMatriz - 2; k >= 0; k--) {
-		double soma = 0;
-		for (int j = k + 1; j <= matriz[0].size() - 1; j++) {
-			soma += matriz[k][j] * x[j] / matriz[k][k];
-		}
-		x[k] = vetor[k] / matriz[k][k] - soma;
-	}*/
-	// Zera os valores praticamente nulos
-	/*for (int i = 0; i < matriz[0].size(); i++) {
-		for (int j = 0; j < matriz.size(); j++) {
-			if (abs(matriz[j][i]) < ZERO) {
-				matriz[j][i] = 0;
-			}
-		}
-	}*/
 	return x;
 }
 
@@ -269,9 +243,6 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 					seno = cosseno * temp;
 					//Givens(W, A, i, j, seno, cosseno);
 
-					//temporario = W;
-					//tempmat = A;
-
 					// alteracoes feitas na matriz A e B sao as mesmas, em loops diferente pois podem possuir tamanhos diferentes
 					for (int k = 0; k < tamColW; k++){
                         temporario = cosseno * W[i][k] - seno * W[j][k];
@@ -290,9 +261,6 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 					seno = 1 / sqrt(1 + temp * temp);
 					cosseno = seno * temp;
 					//Givens(W, A, i, j, seno, cosseno);
-
-					//temporario = W;
-					//tempmat = A;
 
 					// alteracoes feitas na matriz A e B sao as mesmas, em loops diferente pois podem possuir tamanhos diferentes
 					for (int k = 0; k < tamColW; k++){
@@ -331,27 +299,5 @@ vector<vector<double>> solucaoSimultaneos(vector<vector<double>>& W, vector<vect
 				H[k][j] = A[k][j] / W[k][k] - soma;
 		}
 	}
-	// Zera os valores praticamente nulos
-	/*for (int i = 0; i < W[0].size(); i++) {
-		for (int j = 0; j < W.size(); j++) {
-			if (abs(W[j][i]) < ZERO) {
-				W[j][i] = 0;
-			}
-		}
-	}
-	for (int i = 0; i < A[0].size(); i++) {
-		for (int j = 0; j < A.size(); j++) {
-			if (abs(A[j][i]) < ZERO) {
-				A[j][i] = 0;
-			}
-		}
-	}
-	for (int i = 0; i < H[0].size(); i++) {
-		for (int j = 0; j < H.size(); j++) {
-			if (abs(H[j][i]) < ZERO) {
-				H[j][i] = 0;
-			}
-		}
-	}*/
 	return H;
 }
